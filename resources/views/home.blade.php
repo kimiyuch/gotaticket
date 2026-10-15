@@ -20,18 +20,35 @@
 
     <section class="mt-16 border-t border-ink/8 pt-10">
         <h2 class="text-xl font-semibold tracking-tight">So funktioniert's</h2>
-        <ol class="mt-6 grid gap-6 sm:grid-cols-3">
+
+        <div class="mt-8 grid gap-10 sm:grid-cols-2 sm:gap-8">
             @foreach ([
-                ['Freigeben', 'Du kannst an einem Match nicht? Gib deinen Platz in 20 Sekunden frei.'],
-                ['Zusagen', 'Ein Fan meldet sich, du sagst zu. Erst dann seht ihr eure Kontaktdaten.'],
-                ['Weitergeben', 'Du schickst das Ticket direkt. Dein Platz bleibt nicht leer.'],
-            ] as [$step, $text])
-                <li>
-                    <p class="text-sm/6 font-medium text-red tabular-nums">0{{ $loop->iteration }}</p>
-                    <p class="mt-1 font-semibold">{{ $step }}</p>
-                    <p class="mt-1 text-base/6 text-pretty text-ink/60">{{ $text }}</p>
-                </li>
+                'Du hast eins' => [
+                    ['Freigeben', 'Match, Sektor, Anzahl Plätze. Dauert keine 20 Sekunden.'],
+                    ['Zusagen', 'Fans melden sich, du sagst zu. Erst dann seht ihr eure Kontaktdaten.'],
+                    ['Ticket schicken', 'Direkt per E-Mail, Wallet oder Ticketportal. Dein Platz bleibt nicht leer.'],
+                ],
+                'Du suchst eins' => [
+                    ['Sektoren wählen', 'Aktiviere Push und wir melden uns, sobald dort etwas frei wird.'],
+                    ['Anfragen', 'Mit «Ich gang!» sagst du verbindlich zu, dass du auch wirklich hingehst.'],
+                    ['Ticket erhalten', 'Direkt von der Saisonkarten-Besitzer:in. Kostenlos oder zum Originalpreis.'],
+                ],
+            ] as $role => $steps)
+                <div>
+                    <h3 class="font-semibold text-red">{{ $role }}</h3>
+                    <ol class="mt-4 flex flex-col gap-y-5">
+                        @foreach ($steps as [$step, $text])
+                            <li class="flex gap-x-4">
+                                <span class="flex size-7 shrink-0 items-center justify-center rounded-full bg-red/8 text-sm/6 font-semibold text-red-dark tabular-nums" aria-hidden="true">{{ $loop->iteration }}</span>
+                                <div>
+                                    <p class="font-semibold">{{ $step }}</p>
+                                    <p class="mt-0.5 text-base/6 text-pretty text-ink/60">{{ $text }}</p>
+                                </div>
+                            </li>
+                        @endforeach
+                    </ol>
+                </div>
             @endforeach
-        </ol>
+        </div>
     </section>
 </x-layouts::app>
