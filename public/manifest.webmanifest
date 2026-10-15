@@ -1,7 +1,7 @@
 {
     "name": "Got a ticket?",
     "short_name": "Got a ticket?",
-    "description": "Saisonkarten-Plätze von Fan zu Fan weitergeben – FC Winterthur.",
+    "description": "Tickets von Fan zu Fan weitergeben – FC Winterthur.",
     "lang": "de-CH",
     "start_url": "/meine-tickets",
     "scope": "/",

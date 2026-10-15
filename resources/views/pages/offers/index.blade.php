@@ -90,7 +90,7 @@ new #[Title('Ich bruuch eis')] class extends Component
 ?>
 
 <div>
-    <x-page-header title="Ich bruuch eis" description="Diese Plätze geben Saisonkarten-Besitzer:innen gerade weiter. Kostenlos oder zum Originalpreis, direkt von Fan zu Fan." />
+    <x-page-header title="Ich bruuch eis" description="Diese Plätze geben Fans weiter, die selbst nicht können. Kostenlos oder zum Originalpreis, direkt von Fan zu Fan." />
 
     @auth
         @if ($this->mySectorIds() === [])
@@ -181,5 +181,5 @@ new #[Title('Ich bruuch eis')] class extends Component
         @endforelse
     </div>
 
-    <p class="mt-12 text-sm/6 text-pretty text-ink/45">Mit einer Anfrage sagst du zu, dass du wirklich gehst. Wer nicht erscheint, kostet die Saisonkarten-Besitzer:in einen Matchbesuch für die 70%-Regel.</p>
+    <p class="mt-12 text-sm/6 text-pretty text-ink/45">Mit einer Anfrage sagst du zu, dass du wirklich gehst. Wer nicht erscheint, lässt einen Platz leer. Bei Saisonkarten zählt zudem jeder Matchbesuch für die 70%-Regel.</p>
 </div>

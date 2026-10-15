@@ -1,6 +1,6 @@
 <x-layouts::app>
     <section>
-        <p class="text-base/7 font-medium text-red">Saisonkarte, aber keine Zeit?</p>
+        <p class="text-base/7 font-medium text-red">Ticket, aber keine Zeit?</p>
         <h1 class="mt-2 max-w-[20ch] text-4xl font-semibold tracking-tight text-balance sm:text-5xl">Du chasch nöd? Öpper anders chunnt gern.</h1>
         <p class="mt-4 max-w-[48ch] text-lg text-pretty text-ink/60">Gib deinen Platz an einen Fan weiter, der ein Ticket sucht. Kostenlos, ohne Zwischenhandel, direkt von Fan zu Fan.</p>
     </section>
@@ -31,7 +31,7 @@
                 'Du suchst eins' => [
                     ['Sektoren wählen', 'Aktiviere Push und wir melden uns, sobald dort etwas frei wird.'],
                     ['Anfragen', 'Mit «Ich gang!» sagst du verbindlich zu, dass du auch wirklich hingehst.'],
-                    ['Ticket erhalten', 'Direkt von der Saisonkarten-Besitzer:in. Kostenlos oder zum Originalpreis.'],
+                    ['Ticket erhalten', 'Direkt vom Fan, der nicht kann. Kostenlos oder zum Originalpreis.'],
                 ],
             ] as $role => $steps)
                 <div>
