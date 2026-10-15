@@ -7,13 +7,11 @@
 
     <div class="mt-10 grid gap-3 sm:grid-cols-2">
         <a href="{{ route('offers.create') }}" class="group flex flex-col rounded-2xl bg-red p-5 text-white hover:bg-red-dark focus-visible:outline-2 focus-visible:outline-offset-2">
-            <x-phosphor-plus-circle-light class="size-7 text-white/80" />
-            <p class="mt-6 text-xl font-semibold">Ich han eis</p>
+            <p class="text-xl font-semibold">Ich han eis</p>
             <p class="mt-1 text-base/6 text-white/80">Platz für einen Match freigeben.</p>
         </a>
         <a href="{{ route('offers.index') }}" class="group flex flex-col rounded-2xl bg-white p-5 ring-1 ring-ink/10 hover:ring-ink/20 focus-visible:outline-2 focus-visible:outline-offset-2">
-            <x-phosphor-ticket-light class="size-7 text-red" />
-            <p class="mt-6 text-xl font-semibold">Ich bruuch eis</p>
+            <p class="text-xl font-semibold">Ich bruuch eis</p>
             <p class="mt-1 text-base/6 text-ink/60">Freie Plätze ansehen und benachrichtigt werden.</p>
         </a>
     </div>
