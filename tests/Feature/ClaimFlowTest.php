@@ -170,8 +170,7 @@ it('shows open offers to guests and sends them to login when requesting', functi
 it('lets a seeker request from the browse page', function () {
     Livewire::actingAs($this->seeker)
         ->test('pages::offers.index')
-        ->set('seats.'.$this->offer->id, 2)
-        ->call('request', $this->offer->id)
+        ->call('request', $this->offer->id, 2)
         ->assertHasNoErrors()
         ->assertSee('Angefragt');
 

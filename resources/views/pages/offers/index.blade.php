@@ -16,9 +16,6 @@ new #[Title('Ich bruuch eis')] class extends Component
     #[Url(as: 'meine')]
     public bool $onlyMySectors = false;
 
-    /** @var array<int, int> Seats the seeker wants, keyed by offer id */
-    public array $seats = [];
-
     /**
      * Upcoming fixtures with their open offers.
      *
@@ -65,7 +62,7 @@ new #[Title('Ich bruuch eis')] class extends Component
         return auth()->check() ? auth()->user()->sectors()->pluck('sectors.id')->all() : [];
     }
 
-    public function request(int $offerId, RequestSeats $requestSeats): void
+    public function request(int $offerId, RequestSeats $requestSeats, int $seats = 1): void
     {
         if (auth()->guest()) {
             session()->put('url.intended', route('offers.index').'#offer-'.$offerId);
@@ -77,7 +74,7 @@ new #[Title('Ich bruuch eis')] class extends Component
         $offer = Offer::findOrFail($offerId);
 
         try {
-            $requestSeats->handle(auth()->user(), $offer, (int) ($this->seats[$offerId] ?? 1));
+            $requestSeats->handle(auth()->user(), $offer, $seats);
         } catch (\Illuminate\Validation\ValidationException $exception) {
             $this->dispatch('toast', message: $exception->validator->errors()->first(), type: 'error');
 
@@ -91,7 +88,7 @@ new #[Title('Ich bruuch eis')] class extends Component
 };
 ?>
 
-<div>
+<div x-data="{ pick: null, seats: 1 }">
     <x-page-header title="Ich bruuch eis" description="Diese Plätze geben Fans weiter, die selbst nicht können. Kostenlos oder zum Originalpreis, direkt von Fan zu Fan." />
 
     @auth
@@ -162,19 +159,20 @@ new #[Title('Ich bruuch eis')] class extends Component
                                     <x-button variant="plain" size="sm" :href="route('dashboard')" wire:navigate>Status ansehen</x-button>
                                 </div>
                             @else
-                                <div class="mt-4 flex items-center gap-x-2">
-                                    @if ($available > 1)
-                                        <div class="inline-grid grid-cols-[1fr_--spacing(8)] rounded-lg ring-1 ring-ink/15">
-                                            <select name="seats-{{ $offer->id }}" wire:model="seats.{{ $offer->id }}" aria-label="Anzahl Plätze" class="col-span-full row-start-1 appearance-none rounded-lg bg-white py-1 pr-8 pl-3 text-base/6 tabular-nums focus:outline-2 focus:-outline-offset-1 focus:outline-red">
-                                                @foreach (range(1, $available) as $count)
-                                                    <option value="{{ $count }}">{{ $count }} {{ $count === 1 ? 'Platz' : 'Plätze' }}</option>
-                                                @endforeach
-                                            </select>
-                                            <svg aria-hidden="true" viewBox="0 0 8 5" width="8" height="5" fill="none" class="pointer-events-none col-start-2 row-start-1 place-self-center text-ink/50"><path d="M.5.5 4 4 7.5.5" stroke="currentcolor" /></svg>
-                                        </div>
-                                    @endif
-                                    <x-button variant="soft" size="sm" wire:click="request({{ $offer->id }})" wire:loading.attr="disabled" aria-label="Plätze anfragen: {{ $offer->sector->label() }} gegen {{ $fixture->opponent }}">Ich gang! Anfragen</x-button>
-                                </div>
+                                @auth
+                                    <x-button variant="soft" size="sm" class="mt-4" aria-haspopup="dialog"
+                                        aria-label="Plätze anfragen: {{ $offer->sector->label() }} gegen {{ $fixture->opponent }}"
+                                        x-on:click="pick = {{ Js::from([
+                                            'id' => $offer->id,
+                                            'available' => $available,
+                                            'date' => $fixture->kickoff_at->locale('de_CH')->isoFormat('dd, D. MMMM · HH:mm'),
+                                            'opponent' => $fixture->opponent,
+                                            'sector' => $offer->sector->label(),
+                                            'giver' => $offer->giver->displayName(),
+                                        ]) }}; seats = 1; $refs.requestDialog.showModal()">Ich gang! Anfragen</x-button>
+                                @else
+                                    <x-button variant="soft" size="sm" class="mt-4" wire:click="request({{ $offer->id }})">Ich gang! Anfragen</x-button>
+                                @endauth
                             @endif
                         </article>
                     @empty
@@ -187,5 +185,36 @@ new #[Title('Ich bruuch eis')] class extends Component
         @endforelse
     </div>
 
-    <p class="mt-12 text-sm/6 text-pretty text-ink/45">Mit einer Anfrage sagst du zu, dass du wirklich gehst. Wer nicht erscheint, lässt einen Platz leer. Bei Saisonkarten zählt zudem jeder Matchbesuch für die 70%-Regel.</p>
+    <x-dialog x-ref="requestDialog" x-on:click.self="$el.close()" x-on:close="pick = null" aria-labelledby="request-dialog-title" aria-describedby="request-dialog-note">
+        <template x-if="pick">
+            <div>
+                <h2 id="request-dialog-title" class="text-lg font-semibold">Plätze anfragen</h2>
+
+                <div class="mt-4 rounded-xl bg-red/4 p-4">
+                    <p class="text-sm/6 font-medium text-red tabular-nums" x-text="pick.date"></p>
+                    <p class="font-semibold" x-text="pick.opponent"></p>
+                    <p class="mt-1 text-sm/6 text-ink/60"><span x-text="pick.sector"></span> · von <span x-text="pick.giver"></span></p>
+                </div>
+
+                <fieldset class="mt-6" x-show="pick.available > 1">
+                    <legend class="text-base/7 font-semibold">Wie viele Plätze?</legend>
+                    <div class="mt-3 grid grid-cols-4 gap-4">
+                        <template x-for="count in pick.available" x-bind:key="count">
+                            <label class="flex items-center justify-center rounded-lg py-2 text-base/6 font-semibold tabular-nums ring-1 ring-ink/10 hover:ring-ink/20 has-checked:bg-red/4 has-checked:ring-2 has-checked:ring-red has-focus-visible:outline-2 has-focus-visible:outline-offset-2 has-focus-visible:outline-red">
+                                <input type="radio" name="request_seats" class="sr-only" x-bind:value="count" x-model.number="seats" x-bind:aria-label="count === 1 ? '1 Platz' : count + ' Plätze'">
+                                <span x-text="count"></span>
+                            </label>
+                        </template>
+                    </div>
+                </fieldset>
+
+                <p id="request-dialog-note" class="mt-6 text-sm/6 text-pretty text-ink/60">Mit der Anfrage sagst du zu, dass du wirklich gehst. Wer nicht erscheint, lässt einen Platz leer. Bei Saisonkarten zählt zudem jeder Matchbesuch für die 70%-Regel.</p>
+
+                <div class="mt-6 flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
+                    <x-button variant="neutral" x-on:click="$refs.requestDialog.close()">Abbrechen</x-button>
+                    <x-button x-on:click="$wire.request(pick.id, seats); $refs.requestDialog.close()">Ich gang! Anfragen</x-button>
+                </div>
+            </div>
+        </template>
+    </x-dialog>
 </div>
