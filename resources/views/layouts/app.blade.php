@@ -20,7 +20,7 @@
 		<a href="#content" class="sr-only z-50 rounded-lg bg-white px-4 py-2 font-semibold text-ink ring-1 ring-ink/10 focus:not-sr-only focus:fixed focus:top-4 focus:left-4">Zum Inhalt springen</a>
 
 		<div class="isolate flex min-h-dvh flex-col">
-			<header class="sticky top-0 z-10 border-b border-ink/8 bg-white/90 backdrop-blur-sm">
+			<header class="sticky top-0 z-10 bg-white/90 backdrop-blur-sm">
 				<div class="mx-auto flex max-w-2xl items-center gap-x-6 px-4 py-2 sm:px-6">
 					<a href="{{ route('home') }}" wire:navigate aria-label="Homepage" class="-m-1 rounded-lg p-1">
 						<x-logo horizontal class="h-10 -rotate-2 sm:h-11" />
