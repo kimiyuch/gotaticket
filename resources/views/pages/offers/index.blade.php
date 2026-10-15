@@ -121,9 +121,9 @@ new #[Title('Ich bruuch eis')] class extends Component
 
     <div class="mt-10 flex flex-col gap-y-4">
         @forelse ($this->fixtures as $fixture)
-            <section wire:key="fixture-{{ $fixture->id }}" class="overflow-hidden rounded-xl ring-1 ring-ink/10">
-                <h2 class="bg-red p-4 sm:p-5">
-                    <x-fixture :fixture="$fixture" size="lg" inverse />
+            <section wire:key="fixture-{{ $fixture->id }}" class="divide-y divide-ink/8 overflow-hidden rounded-xl ring-1 ring-ink/10">
+                <h2 class="bg-red/4 p-4 sm:p-5">
+                    <x-fixture :fixture="$fixture" size="lg" />
                 </h2>
 
                 <div class="divide-y divide-ink/8">
