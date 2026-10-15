@@ -119,7 +119,7 @@ new #[Title('Ich bruuch eis')] class extends Component
         </a>
     @endauth
 
-    <div class="mt-10 flex flex-col gap-y-4">
+    <div class="mt-10 flex flex-col gap-y-8">
         @forelse ($this->fixtures as $fixture)
             <section wire:key="fixture-{{ $fixture->id }}" class="divide-y divide-ink/8 overflow-hidden rounded-xl ring-1 ring-ink/10">
                 <h2 class="bg-red/4 p-4 sm:p-5">
