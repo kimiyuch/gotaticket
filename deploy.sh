@@ -3,7 +3,7 @@
 # using your own SSH key. Run from your Mac: ./deploy.sh
 #
 # Frontend assets are built locally and committed (npm run build). The server's .env,
-# public/.htaccess (PHP version, set in the Hostpoint panel), storage, caches and the SQLite
+# public/.htaccess (PHP version, set in the Hostpoint panel), storage and the SQLite
 # database are never overwritten or deleted. Migrations run after the upload.
 set -euo pipefail
 cd "$(dirname "$0")"
@@ -39,7 +39,6 @@ rsync -az --delete \
   --exclude '/.env' --exclude '/public/hot' --exclude '/deploy.sh' \
   --exclude '/public/.htaccess' \
   --filter 'protect /storage/**' \
-  --filter 'protect /bootstrap/cache/*.php' \
   --filter 'protect /database/database.sqlite' \
   "$STAGE/" "$HOST:$DEST/"
 
