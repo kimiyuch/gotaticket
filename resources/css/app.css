@@ -15,3 +15,10 @@
     --color-paper: #f6f4f0;
     --color-line: #e5e3df;
 }
+
+@layer base {
+    /* Same focus colour everywhere, matching the brand. */
+    :focus-visible {
+        outline-color: var(--color-red);
+    }
+}

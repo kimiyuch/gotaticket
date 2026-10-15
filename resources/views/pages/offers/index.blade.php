@@ -89,86 +89,97 @@ new #[Title('Ich bruuch eis')] class extends Component
 };
 ?>
 
-<div class="space-y-8">
-    <div>
-        <h1 class="text-3xl font-extrabold tracking-tight">Ich bruuch eis</h1>
-        <p class="mt-1 text-ink/70">Diese Plätze geben Saisonkarten-Besitzer:innen gerade weiter. Kostenlos oder zum Originalpreis, direkt von Fan zu Fan.</p>
-    </div>
+<div>
+    <x-page-header title="Ich bruuch eis" description="Diese Plätze geben Saisonkarten-Besitzer:innen gerade weiter. Kostenlos oder zum Originalpreis, direkt von Fan zu Fan." />
 
     @auth
         @if ($this->mySectorIds() === [])
-            <a href="{{ route('settings') }}" wire:navigate class="block rounded-2xl bg-red px-5 py-4 text-white hover:bg-red-dark">
-                <span class="block font-bold">Nie mehr einen freien Platz verpassen</span>
-                <span class="block text-sm text-white/80">Wähle deine Sektoren und aktiviere Benachrichtigungen →</span>
+            <a href="{{ route('settings') }}" wire:navigate class="mt-6 flex items-center gap-x-4 rounded-xl bg-red/6 p-4 hover:bg-red/10">
+                <x-heroicon-o-bell class="size-6 shrink-0 text-red" />
+                <span class="flex-1">
+                    <span class="block font-semibold">Nie mehr einen freien Platz verpassen</span>
+                    <span class="block text-base/6 text-ink/60">Wähle deine Sektoren und aktiviere Benachrichtigungen.</span>
+                </span>
+                <x-heroicon-m-chevron-right class="size-5 shrink-0 text-ink/40" />
             </a>
         @else
-            <label class="flex items-center gap-2 text-sm font-semibold">
-                <input type="checkbox" wire:model.live="showAllSectors" class="size-4 accent-red">
-                Auch andere Sektoren anzeigen
-            </label>
+            <div class="mt-6 flex items-center gap-x-3">
+                <x-form.toggle id="show-all-sectors" name="show_all_sectors" wire:model.live="showAllSectors" />
+                <label for="show-all-sectors" class="text-base/6">Auch andere Sektoren anzeigen</label>
+            </div>
         @endif
     @else
-        <a href="{{ route('login') }}" wire:navigate class="block rounded-2xl bg-ink px-5 py-4 text-white">
-            <span class="block font-bold">Benachrichtigt werden, wenn etwas frei wird</span>
-            <span class="block text-sm text-white/70">Einloggen und Sektoren wählen →</span>
+        <a href="{{ route('login') }}" wire:navigate class="mt-6 flex items-center gap-x-4 rounded-xl bg-paper p-4 hover:bg-ink/5">
+            <x-heroicon-o-bell class="size-6 shrink-0 text-red" />
+            <span class="flex-1">
+                <span class="block font-semibold">Benachrichtigt werden, wenn etwas frei wird</span>
+                <span class="block text-base/6 text-ink/60">Einloggen und Sektoren wählen.</span>
+            </span>
+            <x-heroicon-m-chevron-right class="size-5 shrink-0 text-ink/40" />
         </a>
     @endauth
 
-    @forelse ($this->fixtures as $fixture)
-        <section wire:key="fixture-{{ $fixture->id }}" class="space-y-3">
-            <h2>
-                <span class="block text-xl font-extrabold">{{ $fixture->opponent }}</span>
-                <span class="block text-sm text-ink/60">{{ $fixture->kickoff_at->locale('de_CH')->isoFormat('dd, D. MMMM · HH:mm') }} · {{ $fixture->competition }}</span>
-            </h2>
+    <div class="mt-10 flex flex-col gap-y-10">
+        @forelse ($this->fixtures as $fixture)
+            <section wire:key="fixture-{{ $fixture->id }}">
+                <h2 class="flex items-baseline justify-between gap-x-4 border-b border-ink/8 pb-3">
+                    <span class="text-xl font-semibold tracking-tight">{{ $fixture->opponent }}</span>
+                    <span class="text-sm/6 text-ink/55 tabular-nums">{{ $fixture->kickoff_at->locale('de_CH')->isoFormat('dd, D. MMM · HH:mm') }}</span>
+                </h2>
 
-            @forelse ($fixture->offers as $offer)
-                @php
-                    $available = $offer->availableSeats();
-                    $myClaim = $this->myClaims->get($offer->id);
-                    $hasActiveClaim = $myClaim && in_array($myClaim->status, \App\Enums\ClaimStatus::active(), true);
-                    $record = $offer->giver->reliability();
-                @endphp
-                <article id="offer-{{ $offer->id }}" wire:key="offer-{{ $offer->id }}" class="scroll-mt-6 rounded-2xl bg-white p-4 ring-1 ring-line target:ring-2 target:ring-red">
-                    <div class="flex items-start justify-between gap-3">
-                        <div>
-                            <p class="font-bold">{{ $offer->sector->label() }}</p>
-                            <p class="text-sm text-ink/60">
-                                {{ $offer->giver->displayName() }}
-                                @if ($record['given'] > 0) · {{ $record['given'] }}× weitergegeben @endif
-                            </p>
-                            @if ($offer->note)
-                                <p class="mt-1 text-sm text-ink/60">«{{ $offer->note }}»</p>
-                            @endif
-                        </div>
-                        <span class="shrink-0 rounded-full bg-red/10 px-3 py-1 text-xs font-bold text-red">{{ $available }} frei</span>
-                    </div>
+                <div class="mt-4 flex flex-col gap-y-3">
+                    @forelse ($fixture->offers as $offer)
+                        @php
+                            $available = $offer->availableSeats();
+                            $myClaim = $this->myClaims->get($offer->id);
+                            $hasActiveClaim = $myClaim && in_array($myClaim->status, \App\Enums\ClaimStatus::active(), true);
+                            $record = $offer->giver->reliability();
+                        @endphp
+                        <article id="offer-{{ $offer->id }}" wire:key="offer-{{ $offer->id }}" class="scroll-mt-24 rounded-xl p-4 ring-1 ring-ink/10 target:ring-2 target:ring-red">
+                            <div class="flex items-start justify-between gap-x-3">
+                                <div>
+                                    <p class="font-semibold">{{ $offer->sector->label() }}</p>
+                                    <p class="text-sm/6 text-ink/55">
+                                        von {{ $offer->giver->displayName() }}@if ($record['given'] > 0) · {{ $record['given'] }}× weitergegeben @endif
+                                    </p>
+                                    @if ($offer->note)
+                                        <p class="mt-1 text-base/6 text-ink/70">«{{ $offer->note }}»</p>
+                                    @endif
+                                </div>
+                                <x-badge color="red" class="tabular-nums">{{ $available }} frei</x-badge>
+                            </div>
 
-                    @if ($hasActiveClaim)
-                        <p class="mt-3 rounded-xl bg-paper px-4 py-3 text-sm font-semibold">
-                            Angefragt ✓ <a href="{{ route('dashboard') }}" wire:navigate class="font-normal text-ink/60 underline">Status ansehen</a>
-                        </p>
-                    @else
-                        <div class="mt-3 flex items-center gap-2">
-                            @if ($available > 1)
-                                <select wire:model="seats.{{ $offer->id }}" class="rounded-xl border-0 bg-paper px-3 py-3 font-semibold ring-1 ring-line" aria-label="Anzahl Plätze">
-                                    @foreach (range(1, $available) as $count)
-                                        <option value="{{ $count }}">{{ $count }}×</option>
-                                    @endforeach
-                                </select>
+                            @if ($hasActiveClaim)
+                                <div class="mt-4 flex items-center justify-between gap-x-3 rounded-lg bg-paper px-3 py-2">
+                                    <p class="flex items-center gap-x-2 text-base/6 font-medium"><x-heroicon-m-check-circle class="size-5 text-red" /> Angefragt</p>
+                                    <x-button variant="plain" size="sm" :href="route('dashboard')" wire:navigate>Status ansehen</x-button>
+                                </div>
+                            @else
+                                <div class="mt-4 flex items-center gap-x-2">
+                                    @if ($available > 1)
+                                        <div class="inline-grid grid-cols-[1fr_--spacing(8)] rounded-lg ring-1 ring-ink/15">
+                                            <select name="seats-{{ $offer->id }}" wire:model="seats.{{ $offer->id }}" aria-label="Anzahl Plätze" class="col-span-full row-start-1 appearance-none rounded-lg bg-white py-1.5 pr-8 pl-3 text-base/6 tabular-nums focus:outline-2 focus:-outline-offset-1 focus:outline-red">
+                                                @foreach (range(1, $available) as $count)
+                                                    <option value="{{ $count }}">{{ $count }} {{ $count === 1 ? 'Platz' : 'Plätze' }}</option>
+                                                @endforeach
+                                            </select>
+                                            <svg viewBox="0 0 8 5" width="8" height="5" fill="none" class="pointer-events-none col-start-2 row-start-1 place-self-center text-ink/50"><path d="M.5.5 4 4 7.5.5" stroke="currentcolor" /></svg>
+                                        </div>
+                                    @endif
+                                    <x-button variant="soft" size="sm" wire:click="request({{ $offer->id }})" wire:loading.attr="disabled">Ich gang! Anfragen</x-button>
+                                </div>
                             @endif
-                            <button type="button" wire:click="request({{ $offer->id }})" wire:loading.attr="disabled" class="flex-1 rounded-xl bg-red px-4 py-3 font-bold text-white hover:bg-red-dark disabled:opacity-60">
-                                Ich gang! Anfragen
-                            </button>
-                        </div>
-                        <p class="mt-2 text-xs text-ink/50">Mit der Anfrage sagst du zu, dass du wirklich gehst. Wer nicht erscheint, kostet die Saisonkarten-Besitzer:in einen Matchbesuch.</p>
-                    @endif
-                    @error("offer.{$offer->id}") <p class="mt-2 text-sm font-medium text-red">{{ $message }}</p> @enderror
-                </article>
-            @empty
-                <p class="rounded-2xl border border-dashed border-ink/20 px-4 py-3 text-sm text-ink/50">Aktuell nichts frei{{ ! $showAllSectors && $this->mySectorIds() !== [] ? ' in deinen Sektoren' : '' }}.</p>
-            @endforelse
-        </section>
-    @empty
-        <p class="rounded-2xl bg-white p-5 ring-1 ring-line">Aktuell sind keine Heimspiele erfasst.</p>
-    @endforelse
+                            @error("offer.{$offer->id}") <p class="mt-2 text-sm/6 text-red-dark">{{ $message }}</p> @enderror
+                        </article>
+                    @empty
+                        <p class="text-base/6 text-ink/45">Aktuell nichts frei{{ ! $showAllSectors && $this->mySectorIds() !== [] ? ' in deinen Sektoren' : '' }}.</p>
+                    @endforelse
+                </div>
+            </section>
+        @empty
+            <p class="rounded-xl bg-paper p-5 text-ink/60">Aktuell sind keine Heimspiele erfasst.</p>
+        @endforelse
+    </div>
+
+    <p class="mt-12 text-sm/6 text-pretty text-ink/45">Mit einer Anfrage sagst du zu, dass du wirklich gehst. Wer nicht erscheint, kostet die Saisonkarten-Besitzer:in einen Matchbesuch für die 70%-Regel.</p>
 </div>

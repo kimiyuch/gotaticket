@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="de-CH">
+<html lang="de-CH" class="bg-white antialiased">
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-        <meta name="theme-color" content="#120a01">
+        <meta name="theme-color" content="#ffffff">
         <meta name="csrf-token" content="{{ csrf_token() }}">
         <meta name="vapid-public-key" content="{{ config('webpush.vapid.public_key') }}">
         <link rel="manifest" href="/manifest.webmanifest">
@@ -16,32 +16,45 @@
         @vite(['resources/css/app.css', 'resources/js/app.js'])
         @livewireStyles
     </head>
-    <body class="min-h-dvh bg-paper font-sans text-ink antialiased">
-        <header class="bg-ink text-white">
-            <div class="mx-auto flex max-w-xl items-center gap-3 px-5 py-4">
-                <a href="{{ route('home') }}" class="flex items-center gap-2">
-                    <x-logo class="size-10 -rotate-6" />
-                    <span class="hidden text-lg font-extrabold tracking-tight min-[400px]:inline">Got a ticket?</span>
-                </a>
+    <body class="min-h-dvh font-sans text-ink">
+        <div class="isolate flex min-h-dvh flex-col">
+            <header class="sticky top-0 z-10 border-b border-ink/8 bg-white/90 backdrop-blur-sm">
+                <div class="mx-auto flex max-w-2xl items-center gap-x-6 px-4 py-2.5 sm:px-6">
+                    <a href="{{ route('home') }}" wire:navigate aria-label="Homepage" class="-m-1 flex items-center gap-x-2.5 rounded-lg p-1">
+                        <x-logo class="size-10" />
+                        <span class="text-lg font-semibold tracking-tight">Got a ticket?</span>
+                    </a>
 
-                <nav class="ml-auto flex items-center gap-4 text-sm font-semibold">
-                    <a href="{{ route('offers.index') }}" wire:navigate @class(['hover:text-white', 'text-white' => request()->routeIs('offers.index'), 'text-white/70' => ! request()->routeIs('offers.index')])>Freie Plätze</a>
-                    @auth
-                        <a href="{{ route('dashboard') }}" wire:navigate @class(['hover:text-white', 'text-white' => request()->routeIs('dashboard'), 'text-white/70' => ! request()->routeIs('dashboard')])>Meine Tickets</a>
-                    @else
-                        <a href="{{ route('login') }}" wire:navigate class="text-white/70 hover:text-white">Login</a>
-                    @endauth
-                </nav>
-            </div>
-        </header>
+                    <nav class="ml-auto flex items-center gap-x-1 max-sm:hidden">
+                        <x-nav-link route="offers.index" icon="ticket">Freie Plätze</x-nav-link>
+                        <x-nav-link route="offers.create" icon="plus-circle">Platz freigeben</x-nav-link>
+                        @auth
+                            <x-nav-link route="dashboard" icon="user-circle">Meine Tickets</x-nav-link>
+                        @else
+                            <x-nav-link route="login" icon="user-circle">Login</x-nav-link>
+                        @endauth
+                    </nav>
+                </div>
+            </header>
 
-        <main class="mx-auto max-w-xl px-5 py-8">
-            {{ $slot }}
-        </main>
+            <main class="mx-auto w-full max-w-2xl flex-1 px-4 pt-8 pb-28 sm:px-6 sm:pt-12 sm:pb-16">
+                {{ $slot }}
+            </main>
 
-        <footer class="mx-auto max-w-xl px-5 pb-10 text-xs text-ink/50">
-            Von Fans, für Fans. Kein offizielles Angebot des FC Winterthur.
-        </footer>
+            <footer class="mx-auto w-full max-w-2xl px-4 pb-28 text-sm/6 text-ink/45 sm:px-6 sm:pb-10">
+                Von Fans, für Fans. Kein offizielles Angebot des FC Winterthur.
+            </footer>
+
+            <nav class="fixed inset-x-0 bottom-0 z-10 flex border-t border-ink/8 bg-white/95 px-2 pt-1 pb-[max(--spacing(1),env(safe-area-inset-bottom))] backdrop-blur-sm sm:hidden">
+                <x-nav-link route="offers.index" icon="ticket">Freie Plätze</x-nav-link>
+                <x-nav-link route="offers.create" icon="plus-circle">Freigeben</x-nav-link>
+                @auth
+                    <x-nav-link route="dashboard" icon="user-circle">Meine Tickets</x-nav-link>
+                @else
+                    <x-nav-link route="login" icon="user-circle">Login</x-nav-link>
+                @endauth
+            </nav>
+        </div>
 
         @livewireScripts
     </body>

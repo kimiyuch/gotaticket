@@ -37,32 +37,25 @@ new #[Title('Einloggen')] class extends Component
 };
 ?>
 
-<div class="space-y-6">
-    <h1 class="text-3xl font-extrabold tracking-tight">Einloggen</h1>
+<div class="max-w-xs">
+    <x-page-header title="Einloggen" />
 
     @if ($sent)
-        <div class="rounded-2xl bg-white p-5 shadow-sm ring-1 ring-line">
-            <p class="font-semibold">Check dein Postfach.</p>
-            <p class="mt-1 text-ink/70">Wir haben dir einen Login-Link an <strong>{{ $email }}</strong> geschickt. Er ist 30 Minuten gültig.</p>
+        <div class="mt-6 rounded-xl bg-paper p-5">
+            <x-heroicon-o-envelope class="size-7 text-red" />
+            <p class="mt-4 font-semibold">Check dein Postfach.</p>
+            <p class="mt-1 text-base/6 text-pretty text-ink/60">Wir haben dir einen Login-Link an <strong class="font-medium text-ink">{{ $email }}</strong> geschickt. Er ist 30 Minuten gültig.</p>
 
             @if ($devLink)
-                <a href="{{ $devLink }}" class="mt-4 inline-block text-sm font-semibold text-red underline">Lokal: direkt einloggen</a>
+                <x-button variant="soft" size="sm" :href="$devLink" class="mt-4">Lokal: direkt einloggen</x-button>
             @endif
         </div>
     @else
-        <p class="text-ink/70">Kein Passwort nötig. Gib deine E-Mail ein und wir schicken dir einen Login-Link. Neu hier? Dann wird dein Konto gleich erstellt.</p>
+        <p class="mt-2 text-base/6 text-pretty text-ink/60">Kein Passwort nötig. Wir schicken dir einen Login-Link. Neu hier? Dann wird dein Konto gleich erstellt.</p>
 
-        <form wire:submit="send" class="space-y-3">
-            <label class="block">
-                <span class="text-sm font-semibold">E-Mail</span>
-                <input type="email" wire:model="email" autocomplete="email" autofocus required
-                    class="mt-1 block w-full rounded-xl border-0 bg-white px-4 py-3 text-lg ring-1 ring-line focus:ring-2 focus:ring-red focus:outline-none">
-            </label>
-            @error('email') <p class="text-sm font-medium text-red">{{ $message }}</p> @enderror
-
-            <button type="submit" class="w-full rounded-xl bg-red px-5 py-3 text-lg font-bold text-white transition hover:bg-red-dark disabled:opacity-60" wire:loading.attr="disabled">
-                Login-Link schicken
-            </button>
+        <form wire:submit="send" class="mt-6 flex flex-col gap-y-4">
+            <x-form.input label="E-Mail" name="email" type="email" wire:model="email" autocomplete="email" autofocus required />
+            <x-button type="submit" wire:loading.attr="disabled">Login-Link schicken</x-button>
         </form>
     @endif
 </div>

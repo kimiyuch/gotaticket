@@ -76,64 +76,56 @@ new #[Title('Platz freigeben')] class extends Component
 };
 ?>
 
-<div class="space-y-8">
-    <div>
-        <h1 class="text-3xl font-extrabold tracking-tight">Ich han eis</h1>
-        <p class="mt-1 text-ink/70">Du kannst an einem Match nicht? Gib deinen Platz frei, ein anderer Fan freut sich.</p>
-    </div>
+<div>
+    <x-page-header title="Ich han eis" description="Du kannst an einem Match nicht? Gib deinen Platz frei, ein anderer Fan freut sich." />
 
     @if ($this->fixtures->isEmpty())
-        <p class="rounded-2xl bg-white p-5 ring-1 ring-line">Aktuell sind keine Heimspiele erfasst.</p>
+        <p class="mt-8 rounded-xl bg-paper p-5 text-ink/60">Aktuell sind keine Heimspiele erfasst.</p>
     @else
-        <form wire:submit="save" class="space-y-8">
-            <fieldset class="space-y-2">
-                <legend class="mb-2 text-sm font-semibold">Match</legend>
-                @foreach ($this->fixtures as $fixture)
-                    <label wire:key="fixture-{{ $fixture->id }}" class="flex cursor-pointer items-center justify-between gap-3 rounded-2xl bg-white px-4 py-3 ring-1 ring-line has-checked:ring-2 has-checked:ring-red">
-                        <span>
-                            <span class="block font-bold">{{ $fixture->opponent }}</span>
-                            <span class="block text-sm text-ink/60">{{ $fixture->kickoff_at->locale('de_CH')->isoFormat('dd, D. MMMM · HH:mm') }} · {{ $fixture->competition }}</span>
-                        </span>
-                        <input type="radio" wire:model="fixtureId" value="{{ $fixture->id }}" class="size-5 accent-red">
-                    </label>
-                @endforeach
-                @error('fixtureId') <p class="text-sm font-medium text-red">{{ $message }}</p> @enderror
-            </fieldset>
-
+        <form wire:submit="save" class="mt-8 flex flex-col gap-y-10">
             <fieldset>
-                <legend class="mb-2 text-sm font-semibold">Sektor</legend>
-                <div class="grid grid-cols-2 gap-2">
-                    @foreach ($this->sectors as $sector)
-                        <label wire:key="sector-{{ $sector->id }}" class="cursor-pointer rounded-2xl bg-white px-4 py-3 ring-1 ring-line has-checked:bg-ink has-checked:text-white has-checked:ring-ink">
-                            <input type="radio" wire:model="sectorId" value="{{ $sector->id }}" class="sr-only">
-                            <span class="block text-xs font-semibold uppercase tracking-wide opacity-60">{{ $sector->code ? 'Sektor '.$sector->code : $sector->kind->label() }}</span>
-                            <span class="block font-bold leading-tight">{{ str($sector->name)->after(' ') }}</span>
+                <legend class="text-base/7 font-semibold">Match</legend>
+                <div class="mt-3 divide-y divide-ink/8 rounded-xl ring-1 ring-ink/10">
+                    @foreach ($this->fixtures as $fixture)
+                        <label wire:key="fixture-{{ $fixture->id }}" class="flex cursor-pointer items-center gap-x-4 px-4 py-3 first:rounded-t-xl last:rounded-b-xl has-checked:bg-red/4">
+                            <x-form.radio name="fixture" wire:model="fixtureId" value="{{ $fixture->id }}" />
+                            <span class="flex-1">
+                                <span class="block font-semibold">{{ $fixture->opponent }}</span>
+                                <span class="block text-sm/6 text-ink/55">{{ $fixture->kickoff_at->locale('de_CH')->isoFormat('dd, D. MMMM · HH:mm') }} · {{ $fixture->competition }}</span>
+                            </span>
                         </label>
                     @endforeach
                 </div>
-                @error('sectorId') <p class="mt-2 text-sm font-medium text-red">{{ $message }}</p> @enderror
+                @error('fixtureId') <p class="mt-2 text-sm/6 text-red-dark">{{ $message }}</p> @enderror
             </fieldset>
 
             <fieldset>
-                <legend class="mb-2 text-sm font-semibold">Anzahl Plätze</legend>
-                <div class="flex items-center gap-4">
-                    <button type="button" wire:click="$set('seats', {{ max(1, $seats - 1) }})" class="size-12 rounded-full bg-white text-2xl font-bold ring-1 ring-line disabled:opacity-40" @disabled($seats <= 1) aria-label="Weniger">−</button>
-                    <span class="w-8 text-center text-3xl font-extrabold">{{ $seats }}</span>
-                    <button type="button" wire:click="$set('seats', {{ min($this::MAX_SEATS, $seats + 1) }})" class="size-12 rounded-full bg-white text-2xl font-bold ring-1 ring-line disabled:opacity-40" @disabled($seats >= $this::MAX_SEATS) aria-label="Mehr">+</button>
+                <legend class="text-base/7 font-semibold">Sektor</legend>
+                <div class="mt-3 grid grid-cols-2 gap-2">
+                    @foreach ($this->sectors as $sector)
+                        <x-form.choice wire:key="sector-{{ $sector->id }}" name="sector" wire:model="sectorId" value="{{ $sector->id }}"
+                            :meta="$sector->code ? 'Sektor '.$sector->code : $sector->kind->label()" :title="str($sector->name)->after(' ')" />
+                    @endforeach
                 </div>
-                @error('seats') <p class="mt-2 text-sm font-medium text-red">{{ $message }}</p> @enderror
+                @error('sectorId') <p class="mt-2 text-sm/6 text-red-dark">{{ $message }}</p> @enderror
             </fieldset>
 
-            <label class="block">
-                <span class="text-sm font-semibold">Notiz <span class="font-normal text-ink/50">(optional)</span></span>
-                <input type="text" wire:model="note" maxlength="200" placeholder="z.B. Reihe 3, nebeneinander"
-                    class="mt-1 block w-full rounded-xl border-0 bg-white px-4 py-3 ring-1 ring-line focus:ring-2 focus:ring-red focus:outline-none">
-                @error('note') <p class="mt-1 text-sm font-medium text-red">{{ $message }}</p> @enderror
-            </label>
+            <fieldset>
+                <legend class="text-base/7 font-semibold">Anzahl Plätze</legend>
+                <div class="mt-3 grid grid-cols-4 gap-2 sm:max-w-xs">
+                    @foreach (range(1, $this::MAX_SEATS) as $count)
+                        <label wire:key="seats-{{ $count }}" class="flex cursor-pointer items-center justify-center rounded-lg py-2.5 text-base/6 font-semibold tabular-nums ring-1 ring-ink/10 hover:ring-ink/20 has-checked:bg-red/4 has-checked:ring-2 has-checked:ring-red has-focus-visible:outline-2 has-focus-visible:outline-offset-2 has-focus-visible:outline-red">
+                            <input type="radio" name="seats" wire:model="seats" value="{{ $count }}" class="sr-only" aria-label="{{ $count }} {{ $count === 1 ? 'Platz' : 'Plätze' }}">
+                            {{ $count }}
+                        </label>
+                    @endforeach
+                </div>
+                @error('seats') <p class="mt-2 text-sm/6 text-red-dark">{{ $message }}</p> @enderror
+            </fieldset>
 
-            <button type="submit" class="w-full rounded-xl bg-red px-5 py-4 text-lg font-bold text-white transition hover:bg-red-dark" wire:loading.attr="disabled">
-                Platz freigeben
-            </button>
+            <x-form.input label="Notiz" hint="(optional)" name="note" wire:model="note" maxlength="200" placeholder="z.B. Reihe 3, nebeneinander" />
+
+            <x-button type="submit" wire:loading.attr="disabled" class="w-full sm:w-auto sm:self-start">Platz freigeben</x-button>
         </form>
     @endif
 </div>

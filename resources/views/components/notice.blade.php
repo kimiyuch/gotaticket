@@ -1,0 +1,14 @@
+@props(['type' => 'success'])
+
+<div {{ $attributes->class([
+    'flex gap-x-3 rounded-xl p-4 text-base/6',
+    'bg-ink/4 text-ink' => $type === 'success',
+    'bg-red/6 text-red-dark' => $type === 'error',
+]) }} role="{{ $type === 'error' ? 'alert' : 'status' }}">
+    @if ($type === 'error')
+        <x-heroicon-m-exclamation-circle class="mt-0.5 size-5 shrink-0" />
+    @else
+        <x-heroicon-m-check-circle class="mt-0.5 size-5 shrink-0 text-red" />
+    @endif
+    <p class="text-pretty">{{ $slot }}</p>
+</div>

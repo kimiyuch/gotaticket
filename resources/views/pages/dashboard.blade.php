@@ -113,156 +113,158 @@ new #[Title('Meine Tickets')] class extends Component
 };
 ?>
 
-<div class="space-y-10">
+<div>
+    <x-page-header title="Meine Tickets">
+        <x-button variant="plain" size="sm" :href="route('settings')" wire:navigate class="pl-2">
+            <x-heroicon-m-cog-6-tooth class="size-5 text-ink/40" /> Einstellungen
+        </x-button>
+    </x-page-header>
+
     @if (session('status'))
-        <p class="rounded-2xl bg-ink px-5 py-4 font-medium text-white">{{ session('status') }}</p>
+        <x-notice class="mt-6">{{ session('status') }}</x-notice>
     @endif
 
     @error('action')
-        <p class="rounded-2xl bg-red px-5 py-4 font-medium text-white">{{ $message }}</p>
+        <x-notice type="error" class="mt-6">{{ $message }}</x-notice>
     @enderror
 
-    <div class="flex items-end justify-between gap-4">
-        <h1 class="text-3xl font-extrabold tracking-tight">Meine Tickets</h1>
-        <a href="{{ route('settings') }}" wire:navigate class="text-sm font-semibold text-ink/60 underline hover:text-red">Einstellungen</a>
-    </div>
-
     {{-- As seeker --}}
-    <section class="space-y-3">
-        <div class="flex items-center justify-between gap-4">
-            <h2 class="text-sm font-semibold uppercase tracking-wide text-ink/50">Meine Anfragen</h2>
-            <a href="{{ route('offers.index') }}" wire:navigate class="text-sm font-bold text-red">Freie Plätze →</a>
+    <section class="mt-10">
+        <div class="flex items-center justify-between gap-x-4 border-b border-ink/8 pb-3">
+            <h2 class="text-xl font-semibold tracking-tight">Meine Anfragen</h2>
+            <x-button variant="plain" size="sm" :href="route('offers.index')" wire:navigate>Freie Plätze</x-button>
         </div>
 
-        @forelse ($this->claims as $claim)
-            @php($fixture = $claim->offer->fixture)
-            <article wire:key="claim-{{ $claim->id }}" class="rounded-2xl bg-white p-4 ring-1 ring-line">
-                <div class="flex items-start justify-between gap-3">
-                    <div>
-                        <p class="font-bold">{{ $fixture->opponent }}</p>
-                        <p class="text-sm text-ink/60">{{ $fixture->kickoff_at->locale('de_CH')->isoFormat('dd, D. MMMM · HH:mm') }}</p>
-                        <p class="mt-1 text-sm">{{ $claim->seats }} × {{ $claim->offer->sector->label() }}</p>
+        <div class="mt-4 flex flex-col gap-y-3">
+            @forelse ($this->claims as $claim)
+                @php($fixture = $claim->offer->fixture)
+                <article wire:key="claim-{{ $claim->id }}" class="rounded-xl p-4 ring-1 ring-ink/10">
+                    <div class="flex items-start justify-between gap-x-3">
+                        <div>
+                            <p class="font-semibold">{{ $fixture->opponent }}</p>
+                            <p class="text-sm/6 text-ink/55 tabular-nums">{{ $fixture->kickoff_at->locale('de_CH')->isoFormat('dd, D. MMMM · HH:mm') }}</p>
+                            <p class="mt-1 text-base/6">{{ $claim->seats }} × {{ $claim->offer->sector->label() }}</p>
+                        </div>
+                        <x-claim-status :claim="$claim" />
                     </div>
-                    <x-claim-status :claim="$claim" />
-                </div>
 
-                @if ($claim->status === ClaimStatus::Requested)
-                    <p class="mt-3 text-sm text-ink/60">Warte auf die Bestätigung von {{ $claim->offer->giver->displayName() }}.</p>
-                @endif
+                    @if ($claim->status === ClaimStatus::Requested)
+                        <p class="mt-3 text-base/6 text-ink/60">Warte auf die Zusage von {{ $claim->offer->giver->displayName() }}.</p>
+                    @endif
 
-                @if ($claim->status->revealsContact())
-                    <x-contact :user="$claim->offer->giver" label="Ticket kommt von" />
-                @endif
+                    @if ($claim->status->revealsContact())
+                        <x-contact :user="$claim->offer->giver" label="Ticket kommt von" />
+                    @endif
 
-                @if ($fixture->kickoff_at->isFuture())
-                    <div class="mt-3 flex flex-wrap gap-2">
-                        @if (in_array($claim->status, [ClaimStatus::Accepted, ClaimStatus::Sent], true))
-                            <button type="button" wire:click="confirmReceipt({{ $claim->id }})" class="rounded-xl bg-red px-4 py-2 font-bold text-white hover:bg-red-dark">Ticket erhalten</button>
-                        @endif
+                    @if ($fixture->kickoff_at->isFuture())
                         @if (in_array($claim->status, [ClaimStatus::Requested, ClaimStatus::Accepted, ClaimStatus::Sent], true))
-                            <button type="button" wire:click="cancel({{ $claim->id }})" wire:confirm="Kannst du wirklich nicht? Dann wird der Platz wieder freigegeben." class="rounded-xl px-4 py-2 font-semibold text-ink/60 ring-1 ring-line hover:text-red">Ich chan doch nöd</button>
+                            <div class="mt-4 flex flex-wrap gap-2">
+                                @if (in_array($claim->status, [ClaimStatus::Accepted, ClaimStatus::Sent], true))
+                                    <x-button variant="soft" size="sm" wire:click="confirmReceipt({{ $claim->id }})">Ticket erhalten</x-button>
+                                @endif
+                                <x-button variant="plain" size="sm" wire:click="cancel({{ $claim->id }})" wire:confirm="Kannst du wirklich nicht? Dann wird der Platz wieder freigegeben.">Ich chan doch nöd</x-button>
+                            </div>
+                        @elseif ($claim->status === ClaimStatus::Received)
+                            <p class="mt-3 text-base/6 text-ink/60">Viel Spass im Stadion! Falls du doch nicht kannst, gib das Ticket bitte selbst weiter.</p>
                         @endif
-                    </div>
-                    @if ($claim->status === ClaimStatus::Received)
-                        <p class="mt-3 text-sm text-ink/60">Viel Spass im Stadion! Falls du doch nicht kannst, gib das Ticket bitte selbst weiter.</p>
+                    @elseif (in_array($claim->status, [ClaimStatus::Sent, ClaimStatus::Received], true))
+                        @if ($claim->outcome === ClaimOutcome::TicketInvalid)
+                            <p class="mt-3 text-base/6 text-red-dark">Du hast gemeldet, dass das Ticket nicht funktioniert hat.</p>
+                        @else
+                            <x-button variant="plain" size="sm" wire:click="report({{ $claim->id }}, 'ticket_invalid')" wire:confirm="Hat das Ticket am Eingang nicht funktioniert?" class="mt-3 -ml-3">Ticket hat nicht funktioniert</x-button>
+                        @endif
                     @endif
-                @elseif (in_array($claim->status, [ClaimStatus::Sent, ClaimStatus::Received], true))
-                    @if ($claim->outcome === ClaimOutcome::TicketInvalid)
-                        <p class="mt-3 text-sm font-semibold text-red">Du hast gemeldet, dass das Ticket nicht funktioniert hat.</p>
-                    @else
-                        <button type="button" wire:click="report({{ $claim->id }}, 'ticket_invalid')" wire:confirm="Hat das Ticket am Eingang nicht funktioniert?" class="mt-3 text-sm font-semibold text-ink/60 underline hover:text-red">Ticket hat nicht funktioniert</button>
-                    @endif
-                @endif
-            </article>
-        @empty
-            <p class="rounded-2xl bg-white p-5 text-ink/60 ring-1 ring-line">Noch keine Anfragen. <a href="{{ route('offers.index') }}" wire:navigate class="font-semibold text-red underline">Freie Plätze ansehen</a></p>
-        @endforelse
+                </article>
+            @empty
+                <p class="text-base/6 text-ink/45">Noch keine Anfragen.</p>
+            @endforelse
+        </div>
     </section>
 
     {{-- As giver --}}
-    <section class="space-y-3">
-        <div class="flex items-center justify-between gap-4">
-            <h2 class="text-sm font-semibold uppercase tracking-wide text-ink/50">Freigegeben</h2>
-            <a href="{{ route('offers.create') }}" wire:navigate class="text-sm font-bold text-red">+ Platz freigeben</a>
+    <section class="mt-12">
+        <div class="flex items-center justify-between gap-x-4 border-b border-ink/8 pb-3">
+            <h2 class="text-xl font-semibold tracking-tight">Freigegeben</h2>
+            <x-button variant="plain" size="sm" :href="route('offers.create')" wire:navigate>Platz freigeben</x-button>
         </div>
 
-        @forelse ($this->offers as $offer)
-            @php($kickedOff = $offer->fixture->kickoff_at->isPast())
-            <article wire:key="offer-{{ $offer->id }}" class="rounded-2xl bg-white p-4 ring-1 ring-line">
-                <div class="flex items-start justify-between gap-3">
-                    <div>
-                        <p class="font-bold">{{ $offer->fixture->opponent }}</p>
-                        <p class="text-sm text-ink/60">{{ $offer->fixture->kickoff_at->locale('de_CH')->isoFormat('dd, D. MMMM · HH:mm') }}</p>
-                        <p class="mt-1 text-sm">{{ $offer->seats }} × {{ $offer->sector->label() }}</p>
-                        @if ($offer->note)
-                            <p class="mt-1 text-sm text-ink/60">«{{ $offer->note }}»</p>
-                        @endif
-                    </div>
-                    <span @class([
-                        'shrink-0 rounded-full px-3 py-1 text-xs font-bold',
-                        'bg-red/10 text-red' => $offer->status === OfferStatus::Open,
-                        'bg-ink text-white' => $offer->status === OfferStatus::Taken,
-                    ])>{{ $offer->status === OfferStatus::Open ? $offer->availableSeats().' offen' : 'Vergeben' }}</span>
-                </div>
-
-                <div class="mt-3 space-y-3">
-                    @foreach ($offer->claims as $claim)
-                        @php($record = $claim->seeker->reliability())
-                        <div wire:key="offer-claim-{{ $claim->id }}" class="border-t border-line pt-3">
-                            <div class="flex items-start justify-between gap-3">
-                                <div>
-                                    <p class="font-semibold">{{ $claim->seeker->displayName() }} · {{ $claim->seats }} {{ $claim->seats === 1 ? 'Platz' : 'Plätze' }}</p>
-                                    <p class="text-sm text-ink/60">
-                                        @if ($record['received'] === 0 && $record['no_shows'] === 0)
-                                            Neu dabei
-                                        @else
-                                            {{ $record['received'] }}× dabei gewesen @if ($record['no_shows'] > 0) · <span class="font-semibold text-red">{{ $record['no_shows'] }}× nicht erschienen</span> @endif
-                                        @endif
-                                    </p>
-                                </div>
-                                <x-claim-status :claim="$claim" />
-                            </div>
-
-                            @if ($claim->status->revealsContact())
-                                <x-contact :user="$claim->seeker" label="Ticket schicken an" />
-                            @endif
-
-                            @if (! $kickedOff)
-                                <div class="mt-3 flex flex-wrap gap-2">
-                                    @if ($claim->status === ClaimStatus::Requested)
-                                        <button type="button" wire:click="accept({{ $claim->id }})" class="rounded-xl bg-red px-4 py-2 font-bold text-white hover:bg-red-dark">Zusagen</button>
-                                        <button type="button" wire:click="decline({{ $claim->id }})" class="rounded-xl px-4 py-2 font-semibold text-ink/60 ring-1 ring-line hover:text-red">Ablehnen</button>
-                                    @elseif ($claim->status === ClaimStatus::Accepted)
-                                        <button type="button" wire:click="markSent({{ $claim->id }})" class="rounded-xl bg-red px-4 py-2 font-bold text-white hover:bg-red-dark">Ticket gesendet</button>
-                                    @endif
-                                </div>
-                            @elseif (in_array($claim->status, [ClaimStatus::Sent, ClaimStatus::Received], true))
-                                @if ($claim->outcome)
-                                    <p class="mt-2 text-sm text-ink/60">Gemeldet: {{ $claim->outcome === ClaimOutcome::NoShow ? 'nicht erschienen' : 'war dabei' }}</p>
-                                @else
-                                    <div class="mt-3 flex flex-wrap items-center gap-2 text-sm">
-                                        <span class="text-ink/60">War {{ $claim->seeker->displayName() }} da?</span>
-                                        <button type="button" wire:click="report({{ $claim->id }}, 'attended')" class="rounded-xl bg-ink px-3 py-1.5 font-bold text-white">Ja</button>
-                                        <button type="button" wire:click="report({{ $claim->id }}, 'no_show')" wire:confirm="Wirklich als «nicht erschienen» melden?" class="rounded-xl px-3 py-1.5 font-semibold text-ink/60 ring-1 ring-line hover:text-red">Nein</button>
-                                    </div>
-                                @endif
+        <div class="mt-4 flex flex-col gap-y-3">
+            @forelse ($this->offers as $offer)
+                @php($kickedOff = $offer->fixture->kickoff_at->isPast())
+                <article wire:key="offer-{{ $offer->id }}" class="rounded-xl p-4 ring-1 ring-ink/10">
+                    <div class="flex items-start justify-between gap-x-3">
+                        <div>
+                            <p class="font-semibold">{{ $offer->fixture->opponent }}</p>
+                            <p class="text-sm/6 text-ink/55 tabular-nums">{{ $offer->fixture->kickoff_at->locale('de_CH')->isoFormat('dd, D. MMMM · HH:mm') }}</p>
+                            <p class="mt-1 text-base/6">{{ $offer->seats }} × {{ $offer->sector->label() }}</p>
+                            @if ($offer->note)
+                                <p class="mt-1 text-base/6 text-ink/60">«{{ $offer->note }}»</p>
                             @endif
                         </div>
-                    @endforeach
+                        @if ($offer->status === OfferStatus::Open)
+                            <x-badge color="red" class="tabular-nums">{{ $offer->availableSeats() }} offen</x-badge>
+                        @else
+                            <x-badge color="solid">Vergeben</x-badge>
+                        @endif
+                    </div>
 
-                    @if ($offer->claims->isEmpty() && $offer->status === OfferStatus::Open && ! $kickedOff)
-                        <p class="text-sm text-ink/60">Noch keine Anfragen. Wir benachrichtigen passende Fans.</p>
+                    @if ($offer->claims->isNotEmpty())
+                        <ul role="list" class="mt-4 divide-y divide-ink/8 border-t border-ink/8">
+                            @foreach ($offer->claims as $claim)
+                                @php($record = $claim->seeker->reliability())
+                                <li wire:key="offer-claim-{{ $claim->id }}" class="py-4 last:pb-0">
+                                    <div class="flex items-start justify-between gap-x-3">
+                                        <div>
+                                            <p class="font-semibold">{{ $claim->seeker->displayName() }} <span class="font-normal text-ink/55">· {{ $claim->seats }} {{ $claim->seats === 1 ? 'Platz' : 'Plätze' }}</span></p>
+                                            <p class="text-sm/6 text-ink/55">
+                                                @if ($record['received'] === 0 && $record['no_shows'] === 0)
+                                                    Neu dabei
+                                                @else
+                                                    {{ $record['received'] }}× dabei gewesen @if ($record['no_shows'] > 0) · <span class="text-red-dark">{{ $record['no_shows'] }}× nicht erschienen</span>@endif
+                                                @endif
+                                            </p>
+                                        </div>
+                                        <x-claim-status :claim="$claim" />
+                                    </div>
+
+                                    @if ($claim->status->revealsContact())
+                                        <x-contact :user="$claim->seeker" label="Ticket schicken an" />
+                                    @endif
+
+                                    @if (! $kickedOff)
+                                        @if ($claim->status === ClaimStatus::Requested)
+                                            <div class="mt-3 flex flex-wrap gap-2">
+                                                <x-button variant="soft" size="sm" wire:click="accept({{ $claim->id }})">Zusagen</x-button>
+                                                <x-button variant="plain" size="sm" wire:click="decline({{ $claim->id }})">Ablehnen</x-button>
+                                            </div>
+                                        @elseif ($claim->status === ClaimStatus::Accepted)
+                                            <x-button variant="soft" size="sm" wire:click="markSent({{ $claim->id }})" class="mt-3">Ticket gesendet</x-button>
+                                        @endif
+                                    @elseif (in_array($claim->status, [ClaimStatus::Sent, ClaimStatus::Received], true))
+                                        @if ($claim->outcome)
+                                            <p class="mt-2 text-base/6 text-ink/60">Gemeldet: {{ $claim->outcome === ClaimOutcome::NoShow ? 'nicht erschienen' : 'war dabei' }}.</p>
+                                        @else
+                                            <div class="mt-3 flex flex-wrap items-center gap-2">
+                                                <p class="text-base/6 text-ink/60">War {{ $claim->seeker->displayName() }} da?</p>
+                                                <x-button variant="soft" size="sm" wire:click="report({{ $claim->id }}, 'attended')">Ja</x-button>
+                                                <x-button variant="plain" size="sm" wire:click="report({{ $claim->id }}, 'no_show')" wire:confirm="Wirklich als «nicht erschienen» melden?">Nein</x-button>
+                                            </div>
+                                        @endif
+                                    @endif
+                                </li>
+                            @endforeach
+                        </ul>
+                    @elseif ($offer->status === OfferStatus::Open && ! $kickedOff)
+                        <p class="mt-3 text-base/6 text-ink/45">Noch keine Anfragen. Wir benachrichtigen passende Fans.</p>
                     @endif
-                </div>
 
-                @if ($offer->status === OfferStatus::Open && ! $kickedOff && $offer->claims->whereIn('status', [ClaimStatus::Accepted, ClaimStatus::Sent, ClaimStatus::Received])->isEmpty())
-                    <button type="button" wire:click="withdraw({{ $offer->id }})" wire:confirm="Freigabe wirklich zurückziehen?" class="mt-3 text-sm font-semibold text-ink/60 underline hover:text-red">
-                        Zurückziehen
-                    </button>
-                @endif
-            </article>
-        @empty
-            <p class="rounded-2xl bg-white p-5 text-ink/60 ring-1 ring-line">Du hast aktuell keine Plätze freigegeben.</p>
-        @endforelse
+                    @if ($offer->status === OfferStatus::Open && ! $kickedOff && $offer->claims->whereIn('status', [ClaimStatus::Accepted, ClaimStatus::Sent, ClaimStatus::Received])->isEmpty())
+                        <x-button variant="plain" size="sm" wire:click="withdraw({{ $offer->id }})" wire:confirm="Freigabe wirklich zurückziehen?" class="mt-3 -ml-3">Zurückziehen</x-button>
+                    @endif
+                </article>
+            @empty
+                <p class="text-base/6 text-ink/45">Du hast aktuell keine Plätze freigegeben.</p>
+            @endforelse
+        </div>
     </section>
 </div>

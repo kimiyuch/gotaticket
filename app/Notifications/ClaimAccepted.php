@@ -10,7 +10,7 @@ class ClaimAccepted extends FanNotification
 
     public function title(): string
     {
-        return 'Du bist dabei! 🎉';
+        return 'Du bist dabei!';
     }
 
     public function body(): string
