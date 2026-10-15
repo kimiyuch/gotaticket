@@ -121,6 +121,7 @@ new #[Title('Ich bruuch eis')] class extends Component
             <p class="text-sm/6 text-ink/70">
                 <label for="only-my-sectors">Nur meine</label>
                 <a href="{{ route('settings') }}" wire:navigate class="underline decoration-ink/20 underline-offset-2 hover:decoration-red">Sektoren</a>
+                <label for="only-my-sectors">anzeigen</label>
             </p>
             <x-form.toggle id="only-my-sectors" name="only_my_sectors" wire:model.live="onlyMySectors" />
         </div>
