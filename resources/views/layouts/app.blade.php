@@ -25,14 +25,14 @@
                         <span class="sr-only">Got a ticket?</span>
                     </a>
 
-                    <nav class="ml-auto flex items-center gap-x-2 max-sm:hidden">
+                    <nav class="ml-auto flex items-center gap-x-4 max-sm:hidden">
+                        <x-nav-link route="offers.index">Freie Plätze</x-nav-link>
+                        <x-nav-link route="offers.create">Platz freigeben</x-nav-link>
                         @auth
                             <x-nav-link route="dashboard">Meine Tickets</x-nav-link>
                         @else
                             <x-nav-link route="login">Login</x-nav-link>
                         @endauth
-                        <x-nav-link route="offers.index" variant="neutral">Freie Plätze</x-nav-link>
-                        <x-nav-link route="offers.create" variant="primary">Platz freigeben</x-nav-link>
                     </nav>
                 </div>
             </header>

@@ -1,10 +1,10 @@
-@props(['route', 'variant' => 'plain'])
+@props(['route'])
 
 @php($active = request()->routeIs($route))
 
-{{-- Header navigation item; the active one gets a red bar sitting on the header's bottom border. --}}
-<x-button :href="route($route)" :variant="$variant" size="sm" wire:navigate :aria-current="$active ? 'page' : null"
+<a href="{{ route($route) }}" wire:navigate @if ($active) aria-current="page" @endif
     {{ $attributes->class([
-        'after:absolute after:inset-x-1 after:-bottom-[calc(--spacing(3.5)+1px)] after:h-0.5 after:rounded-full after:bg-red' => $active,
-        'text-ink' => $active && $variant === 'plain',
-    ]) }}>{{ $slot }}</x-button>
+        'rounded-sm px-2 py-1 text-sm/6 font-medium focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red',
+        'text-ink underline decoration-red decoration-2 underline-offset-8' => $active,
+        'text-ink/55 hover:text-ink' => ! $active,
+    ]) }}>{{ $slot }}</a>

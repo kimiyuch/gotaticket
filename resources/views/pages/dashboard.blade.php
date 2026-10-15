@@ -132,7 +132,7 @@ new #[Title('Meine Tickets')] class extends Component
     <section class="mt-10">
         <div class="flex items-center justify-between gap-x-4 border-b border-ink/8 pb-3">
             <h2 class="text-xl font-semibold tracking-tight">Meine Anfragen</h2>
-            <x-button variant="plain" size="sm" :href="route('offers.index')" wire:navigate>Freie Plätze</x-button>
+            <x-button variant="soft" size="sm" :href="route('offers.index')" wire:navigate class="pl-2"><x-heroicon-m-ticket class="size-5" /> Freie Plätze</x-button>
         </div>
 
         <div class="mt-4 flex flex-col gap-y-3">
@@ -185,7 +185,7 @@ new #[Title('Meine Tickets')] class extends Component
     <section class="mt-12">
         <div class="flex items-center justify-between gap-x-4 border-b border-ink/8 pb-3">
             <h2 class="text-xl font-semibold tracking-tight">Freigegeben</h2>
-            <x-button variant="plain" size="sm" :href="route('offers.create')" wire:navigate>Platz freigeben</x-button>
+            <x-button variant="soft" size="sm" :href="route('offers.create')" wire:navigate class="pl-2"><x-heroicon-m-plus class="size-5" /> Platz freigeben</x-button>
         </div>
 
         <div class="mt-4 flex flex-col gap-y-3">
