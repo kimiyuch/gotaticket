@@ -4,6 +4,12 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
         <meta name="theme-color" content="#120a01">
+        <meta name="csrf-token" content="{{ csrf_token() }}">
+        <meta name="vapid-public-key" content="{{ config('webpush.vapid.public_key') }}">
+        <link rel="manifest" href="/manifest.webmanifest">
+        <link rel="icon" href="/favicon.png" type="image/png">
+        <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+        <meta name="apple-mobile-web-app-title" content="Got a ticket?">
 
         <title>{{ isset($title) ? $title.' · ' : '' }}{{ config('app.name') }}</title>
 
@@ -15,18 +21,15 @@
             <div class="mx-auto flex max-w-xl items-center gap-3 px-5 py-4">
                 <a href="{{ route('home') }}" class="flex items-center gap-2">
                     <x-logo class="size-10 -rotate-6" />
-                    <span class="text-lg font-extrabold tracking-tight">Got a ticket?</span>
+                    <span class="hidden text-lg font-extrabold tracking-tight min-[400px]:inline">Got a ticket?</span>
                 </a>
 
                 <nav class="ml-auto flex items-center gap-4 text-sm font-semibold">
+                    <a href="{{ route('offers.index') }}" wire:navigate @class(['hover:text-white', 'text-white' => request()->routeIs('offers.index'), 'text-white/70' => ! request()->routeIs('offers.index')])>Freie Plätze</a>
                     @auth
-                        <a href="{{ route('dashboard') }}" wire:navigate class="text-white/80 hover:text-white">Meine Tickets</a>
-                        <form method="POST" action="{{ route('logout') }}">
-                            @csrf
-                            <button type="submit" class="text-white/50 hover:text-white">Logout</button>
-                        </form>
+                        <a href="{{ route('dashboard') }}" wire:navigate @class(['hover:text-white', 'text-white' => request()->routeIs('dashboard'), 'text-white/70' => ! request()->routeIs('dashboard')])>Meine Tickets</a>
                     @else
-                        <a href="{{ route('login') }}" wire:navigate class="text-white/80 hover:text-white">Login</a>
+                        <a href="{{ route('login') }}" wire:navigate class="text-white/70 hover:text-white">Login</a>
                     @endauth
                 </nav>
             </div>

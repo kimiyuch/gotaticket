@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Enums\ClaimOutcome;
+use App\Enums\ClaimStatus;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Database\Factories\UserFactory;
 use Filament\Models\Contracts\FilamentUser;
@@ -21,6 +23,16 @@ class User extends Authenticatable implements FilamentUser
 {
     /** @use HasFactory<UserFactory> */
     use HasFactory, HasPushSubscriptions, Notifiable;
+
+    /**
+     * @var array<string, mixed>
+     */
+    protected $attributes = [
+        'is_admin' => false,
+        'wanted_seats' => 1,
+        'notify_by_push' => true,
+        'notify_by_mail' => true,
+    ];
 
     /**
      * Get the attributes that should be cast.
@@ -71,6 +83,23 @@ class User extends Authenticatable implements FilamentUser
     public function displayName(): string
     {
         return $this->name ?: str($this->email)->before('@')->toString();
+    }
+
+    /**
+     * Track record shown to the other side before accepting a request.
+     *
+     * @return array{received: int, no_shows: int, given: int, invalid_tickets: int}
+     */
+    public function reliability(): array
+    {
+        $handedOver = [ClaimStatus::Sent, ClaimStatus::Received];
+
+        return [
+            'received' => $this->claims()->whereIn('status', $handedOver)->where(fn ($query) => $query->whereNull('outcome')->orWhere('outcome', '!=', ClaimOutcome::NoShow))->count(),
+            'no_shows' => $this->claims()->where('outcome', ClaimOutcome::NoShow)->count(),
+            'given' => Claim::query()->whereIn('status', $handedOver)->whereHas('offer', fn ($query) => $query->where('user_id', $this->id))->count(),
+            'invalid_tickets' => Claim::query()->where('outcome', ClaimOutcome::TicketInvalid)->whereHas('offer', fn ($query) => $query->where('user_id', $this->id))->count(),
+        ];
     }
 
     public function isBlocked(): bool

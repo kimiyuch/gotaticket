@@ -1,5 +1,6 @@
 <?php
 
+use App\Actions\Offers\NotifyMatchingSeekers;
 use App\Enums\OfferStatus;
 use App\Models\Fixture;
 use App\Models\Offer;
@@ -45,7 +46,7 @@ new #[Title('Platz freigeben')] class extends Component
         return Sector::active()->get();
     }
 
-    public function save(): void
+    public function save(NotifyMatchingSeekers $notifyMatchingSeekers): void
     {
         $this->validate([
             'fixtureId' => ['required', Rule::exists('fixtures', 'id')->where(fn ($query) => $query->where('kickoff_at', '>', now()))],
@@ -57,7 +58,7 @@ new #[Title('Platz freigeben')] class extends Component
             'sectorId.required' => 'Bitte wähle einen Sektor.',
         ]);
 
-        Offer::create([
+        $offer = Offer::create([
             'fixture_id' => $this->fixtureId,
             'user_id' => auth()->id(),
             'sector_id' => $this->sectorId,
@@ -65,6 +66,8 @@ new #[Title('Platz freigeben')] class extends Component
             'note' => $this->note ?: null,
             'status' => OfferStatus::Open,
         ]);
+
+        $notifyMatchingSeekers->handle($offer);
 
         session()->flash('status', 'Merci! Dein Platz ist freigegeben. Wir melden uns, sobald sich jemand meldet.');
 

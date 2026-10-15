@@ -14,9 +14,9 @@
             <span class="block text-xl font-bold">Ich han eis</span>
             <span class="block text-sm text-white/80">Platz für einen Match freigeben</span>
         </a>
-        <a href="#" class="rounded-2xl bg-ink px-5 py-5 text-white shadow-sm transition hover:bg-ink/90">
+        <a href="{{ route('offers.index') }}" class="rounded-2xl bg-ink px-5 py-5 text-white shadow-sm transition hover:bg-ink/90">
             <span class="block text-xl font-bold">Ich bruuch eis</span>
-            <span class="block text-sm text-white/70">Benachrichtigt werden, wenn etwas frei wird</span>
+            <span class="block text-sm text-white/70">Freie Plätze ansehen und benachrichtigt werden</span>
         </a>
     </div>
 </x-layouts::app>

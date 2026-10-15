@@ -66,7 +66,9 @@ class Offer extends Model
      */
     public function availableSeats(): int
     {
-        $promised = $this->claims()
+        $claims = $this->relationLoaded('claims') ? $this->claims : $this->claims()->get();
+
+        $promised = $claims
             ->whereIn('status', [ClaimStatus::Accepted, ClaimStatus::Sent, ClaimStatus::Received])
             ->sum('seats');
 
