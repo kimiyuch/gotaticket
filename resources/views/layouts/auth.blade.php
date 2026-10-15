@@ -5,7 +5,7 @@
 	</head>
 	<body class="min-h-dvh font-sans text-ink">
 		<div class="isolate flex min-h-dvh flex-col items-center px-4 py-12 sm:justify-center sm:px-6">
-			<p class="mb-6 w-full max-w-sm text-sm/6">
+			<p class="mb-3 w-full max-w-sm text-sm/6">
 				<a href="{{ route('home') }}" class="inline-flex items-center gap-x-1.5 text-ink/55 hover:text-ink">
 					<x-phosphor-arrow-left class="size-4 shrink-0" />
 					Zurück zur Startseite
