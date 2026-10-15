@@ -130,3 +130,10 @@ it('lets fans without a password set one', function () {
 it('renders the auth pages', function (string $route) {
 	$this->get(route($route))->assertOk();
 })->with(['login', 'register', 'password.request']);
+
+it('shows guests only the login link on the homepage', function () {
+	$this->get(route('home'))
+		->assertSee(route('login'))
+		->assertDontSee('Platz freigeben')
+		->assertDontSee('Meine Tickets');
+});
