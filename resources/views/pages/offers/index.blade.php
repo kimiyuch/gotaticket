@@ -171,7 +171,7 @@ new #[Title('Ich bruuch eis')] class extends Component
                             @error("offer.{$offer->id}") <p class="mt-2 text-sm/6 text-red-dark">{{ $message }}</p> @enderror
                         </article>
                     @empty
-                        <p class="p-4 text-base/6 text-ink/45 sm:p-5">Aktuell nichts frei{{ ! $showAllSectors && $this->mySectorIds() !== [] ? ' in deinen Sektoren' : '' }}.</p>
+                        <p class="p-4 text-base/6 text-red sm:p-5">Aktuell nichts frei{{ ! $showAllSectors && $this->mySectorIds() !== [] ? ' in deinen Sektoren' : '' }}.</p>
                     @endforelse
                 </div>
             </section>
