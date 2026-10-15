@@ -9,8 +9,8 @@
 				<x-button variant="neutral" :href="route('offers.index')">Ich bruuch eis</x-button>
 			</div>
 		</div>
-		<div class="flex aspect-4/3 items-center justify-center rounded-2xl bg-paper max-sm:-order-1 max-sm:aspect-2/1 sm:order-2">
-			<x-fcw-crest label="FC Winterthur" class="size-32 sm:size-40" />
+		<div class="flex max-sm:-order-1 sm:order-2 sm:justify-center">
+			<x-fcw-crest label="FC Winterthur" class="size-24 sm:size-48" />
 		</div>
 	</section>
 
