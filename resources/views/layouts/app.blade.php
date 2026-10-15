@@ -44,7 +44,7 @@
             <footer class="mx-auto w-full max-w-2xl px-4 pb-28 text-sm/6 text-ink/45 sm:px-6 sm:pb-10">
                 <p>
                     Von Fans, für Fans. Kein offizielles Angebot des FC Winterthur.
-                    Mit <x-heroicon-s-heart class="inline size-4 -translate-y-px text-red" aria-label="Liebe" role="img" /> gemacht von <a href="https://kimiyu.ch" target="_blank" rel="noopener" class="underline decoration-ink/20 underline-offset-2 hover:text-ink">kimiyu.ch</a>
+                    Mit <x-phosphor-heart-fill class="inline size-4 -translate-y-px text-red" aria-label="Liebe" role="img" /> gemacht von <a href="https://kimiyu.ch" target="_blank" rel="noopener" class="underline decoration-ink/20 underline-offset-2 hover:text-ink">kimiyu.ch</a>
                 </p>
             </footer>
 

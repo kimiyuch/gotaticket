@@ -42,7 +42,7 @@ new #[Title('Einloggen')] class extends Component
 
     @if ($sent)
         <div class="mt-6 rounded-xl bg-paper p-5">
-            <x-heroicon-o-envelope class="size-7 text-red" />
+            <x-phosphor-envelope-simple class="size-7 text-red" />
             <p class="mt-4 font-semibold">Check dein Postfach.</p>
             <p class="mt-1 text-base/6 text-pretty text-ink/60">Wir haben dir einen Login-Link an <strong class="font-medium text-ink">{{ $email }}</strong> geschickt. Er ist 30 Minuten gültig.</p>
 

@@ -6,18 +6,18 @@
     <ul role="list" class="mt-2 flex flex-wrap gap-2">
         <li>
             <x-button variant="neutral" size="sm" href="mailto:{{ $user->email }}" class="pl-2">
-                <x-heroicon-m-envelope class="size-4 text-ink/50" /> {{ $user->email }}
+                <x-phosphor-envelope-simple-bold class="size-4 text-ink/50" /> {{ $user->email }}
             </x-button>
         </li>
         @if ($user->phone)
             <li>
                 <x-button variant="neutral" size="sm" href="tel:{{ preg_replace('/[^0-9+]/', '', $user->phone) }}" class="pl-2">
-                    <x-heroicon-m-phone class="size-4 text-ink/50" /> {{ $user->phone }}
+                    <x-phosphor-phone-bold class="size-4 text-ink/50" /> {{ $user->phone }}
                 </x-button>
             </li>
             <li>
                 <x-button variant="neutral" size="sm" href="https://wa.me/{{ preg_replace('/^0/', '41', preg_replace('/[^0-9]/', '', $user->phone)) }}" target="_blank" rel="noopener" class="pl-2">
-                    <x-heroicon-m-chat-bubble-left-right class="size-4 text-ink/50" /> WhatsApp
+                    <x-phosphor-whatsapp-logo-bold class="size-4 text-ink/50" /> WhatsApp
                 </x-button>
             </li>
         @endif
