@@ -1,21 +1,7 @@
 <!DOCTYPE html>
 <html lang="de-CH" class="bg-white antialiased">
 	<head>
-		<meta charset="utf-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-		<meta name="theme-color" content="#ffffff">
-		<meta name="csrf-token" content="{{ csrf_token() }}">
-		<meta name="vapid-public-key" content="{{ config('webpush.vapid.public_key') }}">
-		<link rel="manifest" href="/manifest.webmanifest">
-		<link rel="icon" href="/favicon.svg" type="image/svg+xml">
-		<link rel="icon" href="/favicon.png" type="image/png">
-		<link rel="apple-touch-icon" href="/apple-touch-icon.png">
-		<meta name="apple-mobile-web-app-title" content="Got a ticket?">
-
-		<title>{{ isset($title) ? $title.' · ' : '' }}{{ config('app.name') }}</title>
-
-		@vite(['resources/css/app.css', 'resources/js/app.js'])
-		@livewireStyles
+		@include('layouts.partials.head')
 	</head>
 	<body class="min-h-dvh font-sans text-ink">
 		<a href="#content" class="sr-only z-50 rounded-lg bg-white px-4 py-2 font-semibold text-ink ring-1 ring-ink/10 focus:not-sr-only focus:fixed focus:top-4 focus:left-4">Zum Inhalt springen</a>

@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="de-CH" class="bg-white antialiased sm:bg-paper">
+	<head>
+		@include('layouts.partials.head')
+	</head>
+	<body class="min-h-dvh font-sans text-ink">
+		<div class="isolate flex min-h-dvh flex-col items-center px-4 py-12 sm:justify-center sm:px-6">
+			<main id="content" class="w-full max-w-sm sm:rounded-2xl sm:bg-white sm:p-10 sm:shadow-sm sm:ring-1 sm:ring-ink/5">
+				<a href="{{ route('home') }}" aria-label="Zur Startseite" class="mx-auto flex w-fit rounded-lg focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red">
+					<x-logo class="h-20 -rotate-3" />
+				</a>
+
+				<h1 class="mt-8 text-center text-2xl font-semibold tracking-tight text-balance">{{ $heading }}</h1>
+				@isset($description)
+					<p class="mt-2 text-center text-base/6 text-pretty text-ink/60">{{ $description }}</p>
+				@endisset
+
+				<div class="mt-8">
+					{{ $slot }}
+				</div>
+			</main>
+		</div>
+
+		<x-toasts />
+
+		@livewireScripts
+	</body>
+</html>
