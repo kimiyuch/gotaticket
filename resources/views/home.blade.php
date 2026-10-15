@@ -9,7 +9,7 @@
 		</div>
 	</section>
 
-	<section class="mt-28">
+	<section class="mt-16 sm:mt-28">
 		<h2 class="text-xl font-semibold tracking-tight">So funktioniert's</h2>
 
 		<div class="mt-8 grid gap-12 sm:grid-cols-2 sm:gap-8">

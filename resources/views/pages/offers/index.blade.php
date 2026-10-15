@@ -93,23 +93,23 @@ new #[Title('Ich bruuch eis')] class extends Component
 
 	@auth
 		@if ($this->mySectorIds() === [])
-			<a href="{{ route('settings') }}" wire:navigate class="mt-6 flex items-center gap-x-4 rounded-xl bg-red/6 p-4 hover:bg-red/10">
-				<x-phosphor-bell-light class="size-6 shrink-0 text-red" />
+			<a href="{{ route('settings') }}" wire:navigate class="mt-6 flex items-start gap-x-4 rounded-xl bg-red/6 p-4 hover:bg-red/10">
+				<x-phosphor-bell-light class="mt-0.5 size-6 shrink-0 text-red" />
 				<span class="flex-1">
 					<span class="block font-semibold">Nie mehr einen freien Platz verpassen</span>
 					<span class="block text-base/6 text-ink/60">Wähle deine Sektoren und aktiviere Benachrichtigungen.</span>
 				</span>
-				<x-phosphor-caret-right class="size-5 shrink-0 text-ink/40" />
+				<x-phosphor-caret-right class="size-5 shrink-0 self-center text-ink/40" />
 			</a>
 		@endif
 	@else
-		<a href="{{ route('login') }}" wire:navigate class="mt-6 flex items-center gap-x-4 rounded-xl bg-paper p-4 hover:bg-ink/5">
-			<x-phosphor-bell-light class="size-6 shrink-0 text-red" />
+		<a href="{{ route('login') }}" wire:navigate class="mt-6 flex items-start gap-x-4 rounded-xl bg-paper p-4 hover:bg-ink/5">
+			<x-phosphor-bell-light class="mt-0.5 size-6 shrink-0 text-red" />
 			<span class="flex-1">
 				<span class="block font-semibold">Benachrichtigt werden, wenn etwas frei wird</span>
 				<span class="block text-base/6 text-ink/60">Einloggen und Sektoren wählen.</span>
 			</span>
-			<x-phosphor-caret-right class="size-5 shrink-0 text-ink/40" />
+			<x-phosphor-caret-right class="size-5 shrink-0 self-center text-ink/40" />
 		</a>
 	@endauth
 
