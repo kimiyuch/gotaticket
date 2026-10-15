@@ -1,16 +1,11 @@
 <x-layouts::app>
-	<section class="grid items-center gap-8 sm:grid-cols-[3fr_2fr]">
-		<div class="sm:order-1">
-			<p class="text-base/7 font-medium text-red">Ticket, aber keine Zeit?</p>
-			<h1 class="mt-2 max-w-[20ch] text-4xl font-semibold tracking-tight text-balance sm:text-5xl">Du chasch nöd? Öpper anders chunnt gern.</h1>
-			<p class="mt-4 max-w-[48ch] text-lg text-pretty text-ink/60">Gib deinen Platz an einen Fan weiter, der ein Ticket sucht. Kostenlos, ohne Zwischenhandel, direkt von Fan zu Fan.</p>
-			<div class="mt-8 flex flex-wrap gap-3">
-				<x-button :href="route('offers.create')">Ich han eis</x-button>
-				<x-button variant="neutral" :href="route('offers.index')">Ich bruuch eis</x-button>
-			</div>
-		</div>
-		<div class="flex max-sm:-order-1 sm:order-2 sm:justify-center">
-			<x-fcw-crest label="FC Winterthur" class="size-24 sm:size-48" />
+	<section>
+		<p class="text-base/7 font-medium text-red">Ticket, aber keine Zeit?</p>
+		<h1 class="mt-2 text-4xl font-semibold tracking-tight text-balance sm:text-5xl">Du chasch nöd? Öpper anders chunnt gern.</h1>
+		<p class="mt-4 text-lg text-pretty text-ink/60">Gib deinen Platz an einen Fan weiter, der ein Ticket sucht. Kostenlos, ohne Zwischenhandel, direkt von Fan zu Fan.</p>
+		<div class="mt-8 flex flex-wrap gap-3">
+			<x-button :href="route('offers.create')">Ich han eis</x-button>
+			<x-button variant="neutral" :href="route('offers.index')">Ich bruuch eis</x-button>
 		</div>
 	</section>
 
