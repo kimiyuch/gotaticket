@@ -20,9 +20,9 @@
         <div class="isolate flex min-h-dvh flex-col">
             <header class="sticky top-0 z-10 border-b border-ink/8 bg-white/90 backdrop-blur-sm">
                 <div class="mx-auto flex max-w-2xl items-center gap-x-6 px-4 py-2.5 sm:px-6">
-                    <a href="{{ route('home') }}" wire:navigate aria-label="Homepage" class="-m-1 flex items-center gap-x-2.5 rounded-lg p-1">
-                        <x-logo class="size-10" />
-                        <span class="text-lg font-semibold tracking-tight">Got a ticket?</span>
+                    <a href="{{ route('home') }}" wire:navigate aria-label="Homepage" class="-my-2 -ml-1 rounded-lg p-1">
+                        <x-logo class="size-16 -rotate-3 sm:size-18" />
+                        <span class="sr-only">Got a ticket?</span>
                     </a>
 
                     <nav class="ml-auto flex items-center gap-x-1 max-sm:hidden">
