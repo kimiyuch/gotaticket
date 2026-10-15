@@ -121,9 +121,9 @@ new #[Title('Ich bruuch eis')] class extends Component
 
     <div class="mt-10 flex flex-col gap-y-4">
         @forelse ($this->fixtures as $fixture)
-            <section wire:key="fixture-{{ $fixture->id }}" class="divide-y divide-ink/8 rounded-xl ring-1 ring-ink/10">
-                <h2 class="p-4 sm:p-5">
-                    <x-fixture :fixture="$fixture" size="lg" />
+            <section wire:key="fixture-{{ $fixture->id }}" class="overflow-hidden rounded-xl ring-1 ring-ink/10">
+                <h2 class="bg-red p-4 sm:p-5">
+                    <x-fixture :fixture="$fixture" size="lg" inverse />
                 </h2>
 
                 <div class="divide-y divide-ink/8">
@@ -134,7 +134,7 @@ new #[Title('Ich bruuch eis')] class extends Component
                             $hasActiveClaim = $myClaim && in_array($myClaim->status, \App\Enums\ClaimStatus::active(), true);
                             $record = $offer->giver->reliability();
                         @endphp
-                        <article id="offer-{{ $offer->id }}" wire:key="offer-{{ $offer->id }}" class="scroll-mt-24 p-4 last:rounded-b-xl target:bg-red/4 sm:p-5">
+                        <article id="offer-{{ $offer->id }}" wire:key="offer-{{ $offer->id }}" class="scroll-mt-24 p-4 target:bg-red/4 sm:p-5">
                             <div class="flex items-start justify-between gap-x-3">
                                 <div>
                                     <p class="font-semibold">{{ $offer->sector->label() }}</p>
