@@ -18,3 +18,15 @@ Route::middleware('auth')->group(function () {
 Route::middleware(['auth', 'verified'])->group(function () {
 	Route::livewire('/ich-han-eis', 'pages::offers.create')->name('offers.create');
 });
+
+Route::middleware(['auth', 'can:admin'])->prefix('admin')->name('admin.')->group(function () {
+	Route::livewire('/', 'pages::admin.index')->name('index');
+	Route::livewire('/matches', 'pages::admin.fixtures.index')->name('fixtures.index');
+	Route::livewire('/matches/neu', 'pages::admin.fixtures.form')->name('fixtures.create');
+	Route::livewire('/matches/{fixture}', 'pages::admin.fixtures.form')->name('fixtures.edit');
+	Route::livewire('/sektoren', 'pages::admin.sectors.index')->name('sectors.index');
+	Route::livewire('/sektoren/neu', 'pages::admin.sectors.form')->name('sectors.create');
+	Route::livewire('/sektoren/{sector}', 'pages::admin.sectors.form')->name('sectors.edit');
+	Route::livewire('/fans', 'pages::admin.users')->name('users');
+	Route::livewire('/uebergaben', 'pages::admin.claims')->name('claims');
+});

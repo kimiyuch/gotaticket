@@ -195,8 +195,13 @@ new #[Title('Profil')] class extends Component
 		<x-button type="submit" variant="neutral" size="sm" wire:loading.attr="disabled" class="mt-6">Passwort speichern</x-button>
 	</form>
 
-	<form method="POST" action="{{ route('logout') }}" class="mt-12 border-t border-ink/8 pt-6">
-		@csrf
-		<x-button type="submit" variant="plain" size="sm" class="-ml-3">Abmelden</x-button>
-	</form>
+	<div class="mt-12 flex flex-wrap items-center gap-3 border-t border-ink/8 pt-6">
+		@can('admin')
+			<x-button variant="neutral" size="sm" :href="route('admin.index')" wire:navigate class="pl-2"><x-phosphor-wrench class="size-4" /> Admin</x-button>
+		@endcan
+		<form method="POST" action="{{ route('logout') }}">
+			@csrf
+			<x-button type="submit" variant="plain" size="sm" @class(['-ml-3' => ! auth()->user()->can('admin')])>Abmelden</x-button>
+		</form>
+	</div>
 </div>

@@ -1,6 +1,6 @@
-@props(['route'])
+@props(['route', 'activePattern' => null])
 
-@php($active = request()->routeIs($route))
+@php($active = request()->routeIs($activePattern ?? $route))
 
 <a href="{{ route($route) }}" wire:navigate @if ($active) aria-current="page" @endif
 	{{ $attributes->class([

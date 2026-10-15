@@ -20,6 +20,9 @@
 						@auth
 							<x-nav-link route="dashboard">Meine Tickets</x-nav-link>
 							<x-nav-link route="profile">Profil</x-nav-link>
+							@can('admin')
+								<x-nav-link route="admin.index" active-pattern="admin.*">Admin</x-nav-link>
+							@endcan
 						@else
 							<x-nav-link route="login">Login</x-nav-link>
 						@endauth

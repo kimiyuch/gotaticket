@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Attributes\Hidden;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use NotificationChannels\WebPush\HasPushSubscriptions;
@@ -73,6 +74,16 @@ class User extends Authenticatable implements MustVerifyEmail
 	public function claims(): HasMany
 	{
 		return $this->hasMany(Claim::class);
+	}
+
+	/**
+	 * Requests other fans made for this user's offers.
+	 *
+	 * @return HasManyThrough<Claim, Offer, $this>
+	 */
+	public function incomingClaims(): HasManyThrough
+	{
+		return $this->hasManyThrough(Claim::class, Offer::class);
 	}
 
 	/**

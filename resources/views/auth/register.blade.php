@@ -8,7 +8,7 @@
 		<div class="flex flex-col gap-y-4">
 			<div class="flex flex-col gap-y-2">
 				<x-form.input label="Name" name="name" value="{{ old('name') }}" autocomplete="name" maxlength="60" placeholder="z.B. Pippo" autofocus required />
-				<p class="text-sm/6 text-pretty text-ink/55">Sehen andere Fans erst, wenn eine Übergabe zugesagt ist.</p>
+				<p class="text-sm/5 text-pretty text-ink/55">Sehen andere Fans erst, wenn eine Übergabe zugesagt ist.</p>
 			</div>
 			<x-form.input label="E-Mail" name="email" type="email" value="{{ old('email') }}" autocomplete="email" required />
 			<x-form.input label="Passwort" hint="(mind. 8 Zeichen)" name="password" type="password" autocomplete="new-password" minlength="8" required />

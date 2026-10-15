@@ -2,17 +2,10 @@
 
 namespace App\Enums;
 
-use Filament\Support\Contracts\HasLabel;
-
-enum SectorKind: string implements HasLabel
+enum SectorKind: string
 {
 	case Standing = 'standing';
 	case Seated = 'seated';
-
-	public function getLabel(): string
-	{
-		return $this->label();
-	}
 
 	public function label(): string
 	{
