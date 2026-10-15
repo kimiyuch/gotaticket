@@ -9,7 +9,7 @@ it('saves seeker preferences and contact details', function () {
 	$sectors = Sector::factory()->count(2)->create();
 
 	Livewire::actingAs($user)
-		->test('pages::settings')
+		->test('pages::profile')
 		->set('name', 'Pippo')
 		->set('phone', '079 123 45 67')
 		->set('sectorIds', $sectors->modelKeys())
@@ -41,8 +41,8 @@ it('stores and removes push subscriptions', function () {
 
 it('confirms saving with a toast', function () {
 	Livewire::actingAs(User::factory()->create())
-		->test('pages::settings')
+		->test('pages::profile')
 		->set('name', 'Pippo')
 		->call('save')
-		->assertDispatched('toast', message: 'Einstellungen gespeichert.');
+		->assertDispatched('toast', message: 'Profil gespeichert.');
 });

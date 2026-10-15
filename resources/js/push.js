@@ -17,7 +17,7 @@ export function registerServiceWorker() {
 }
 
 /**
- * Alpine component behind the "Push aktivieren" switch on the settings page.
+ * Alpine component behind the "Push aktivieren" switch on the profile page.
  */
 export function pushToggle() {
 	return {

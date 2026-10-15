@@ -33,6 +33,7 @@
 						<x-nav-link route="offers.create">Platz freigeben</x-nav-link>
 						@auth
 							<x-nav-link route="dashboard">Meine Tickets</x-nav-link>
+							<x-nav-link route="profile">Profil</x-nav-link>
 						@else
 							<x-nav-link route="login">Login</x-nav-link>
 						@endauth
@@ -55,7 +56,8 @@
 				<x-tab-link route="offers.index" icon="ticket">Freie Plätze</x-tab-link>
 				<x-tab-link route="offers.create" icon="plus-circle">Freigeben</x-tab-link>
 				@auth
-					<x-tab-link route="dashboard" icon="user-circle">Meine Tickets</x-tab-link>
+					<x-tab-link route="dashboard" icon="cards">Meine Tickets</x-tab-link>
+					<x-tab-link route="profile" icon="user-circle">Profil</x-tab-link>
 				@else
 					<x-tab-link route="login" icon="user-circle">Login</x-tab-link>
 				@endauth

@@ -22,6 +22,10 @@ class RequestSeats
 			throw ValidationException::withMessages(['seats' => 'Dein Konto ist gesperrt.']);
 		}
 
+		if (! $seeker->hasVerifiedEmail()) {
+			throw ValidationException::withMessages(['seats' => 'Bitte bestätige zuerst deine E-Mail-Adresse.']);
+		}
+
 		if ($offer->user_id === $seeker->id) {
 			throw ValidationException::withMessages(['seats' => 'Das ist dein eigenes Angebot.']);
 		}

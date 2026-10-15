@@ -1,17 +1,28 @@
 <?php
 
 use App\Models\Sector;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
+use Illuminate\Validation\Rules\Password;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\Title;
 use Livewire\Component;
 
-new #[Title('Einstellungen')] class extends Component
+new #[Title('Profil')] class extends Component
 {
 	public string $name = '';
 
+	public string $email = '';
+
 	public string $phone = '';
+
+	public string $currentPassword = '';
+
+	public string $password = '';
+
+	public string $passwordConfirmation = '';
 
 	/** @var list<int> */
 	public array $sectorIds = [];
@@ -25,6 +36,7 @@ new #[Title('Einstellungen')] class extends Component
 		$user = auth()->user();
 
 		$this->name = (string) $user->name;
+		$this->email = $user->email;
 		$this->phone = (string) $user->phone;
 		$this->sectorIds = $user->sectors()->pluck('sectors.id')->all();
 		$this->wantedSeats = $user->wanted_seats;
@@ -44,6 +56,7 @@ new #[Title('Einstellungen')] class extends Component
 	{
 		$this->validate([
 			'name' => ['required', 'string', 'max:60'],
+			'email' => ['required', 'string', 'email:rfc', 'max:255', Rule::unique(User::class)->ignore(auth()->id())],
 			'phone' => ['nullable', 'string', 'max:30', 'regex:/^[0-9 +()\-]*$/'],
 			'sectorIds' => ['array'],
 			'sectorIds.*' => ['integer', Rule::exists('sectors', 'id')->where('is_active', true)],
@@ -54,21 +67,55 @@ new #[Title('Einstellungen')] class extends Component
 		]);
 
 		$user = auth()->user();
-		$user->update([
+		$user->fill([
 			'name' => $this->name,
+			'email' => $this->email,
 			'phone' => $this->phone ?: null,
 			'wanted_seats' => $this->wantedSeats,
 			'notify_by_mail' => $this->notifyByMail,
 		]);
+
+		$emailChanged = $user->isDirty('email');
+
+		if ($emailChanged) {
+			$user->email_verified_at = null;
+		}
+
+		$user->save();
 		$user->sectors()->sync($this->sectorIds);
 
-		$this->dispatch('toast', message: 'Einstellungen gespeichert.');
+		if ($emailChanged) {
+			$user->sendEmailVerificationNotification();
+		}
+
+		$this->dispatch('toast', message: $emailChanged ? 'Gespeichert. Bitte bestätige deine neue E-Mail-Adresse.' : 'Profil gespeichert.');
+	}
+
+	public function updatePassword(): void
+	{
+		$user = auth()->user();
+
+		$this->validate([
+			'currentPassword' => $user->password ? ['required', 'string', 'current_password'] : [],
+			'password' => ['required', 'string', Password::default(), 'same:passwordConfirmation'],
+		], [
+			'currentPassword.current_password' => 'Das aktuelle Passwort stimmt nicht.',
+			'password.same' => 'Die beiden Passwörter stimmen nicht überein.',
+		], [
+			'currentPassword' => 'Aktuelles Passwort',
+			'password' => 'Neues Passwort',
+		]);
+
+		$user->forceFill(['password' => Hash::make($this->password)])->save();
+
+		$this->reset('currentPassword', 'password', 'passwordConfirmation');
+		$this->dispatch('toast', message: 'Passwort geändert.');
 	}
 };
 ?>
 
 <div>
-	<x-page-header title="Einstellungen" description="Sag uns, wo du gern stehst oder sitzt. Wir melden uns, sobald dort ein Platz frei wird." />
+	<x-page-header title="Profil" description="Deine Angaben, Sektoren und Benachrichtigungen. Wir melden uns, sobald in deinen Sektoren ein Platz frei wird." />
 
 	<form wire:submit="save" class="mt-8 flex flex-col gap-y-12">
 		<fieldset>
@@ -126,12 +173,26 @@ new #[Title('Einstellungen')] class extends Component
 
 			<div class="mt-4 flex flex-col gap-y-4 sm:max-w-sm">
 				<x-form.input label="Name" name="name" wire:model="name" autocomplete="name" maxlength="60" placeholder="z.B. Pippo" />
+				<x-form.input label="E-Mail" name="email" type="email" wire:model="email" autocomplete="email" required />
 				<x-form.input label="Telefon / WhatsApp" hint="(optional)" name="phone" type="tel" wire:model="phone" autocomplete="tel" placeholder="079 123 45 67" />
-				<p class="text-sm/6 text-ink/55">E-Mail: {{ auth()->user()->email }}</p>
 			</div>
 		</fieldset>
 
 		<x-button type="submit" wire:loading.attr="disabled" class="w-full sm:w-auto sm:self-start">Speichern</x-button>
+	</form>
+
+	<form wire:submit="updatePassword" class="mt-12 border-t border-ink/8 pt-12">
+		<fieldset>
+			<legend class="text-base/7 font-semibold">{{ auth()->user()->password ? 'Passwort ändern' : 'Passwort setzen' }}</legend>
+			<div class="mt-4 flex flex-col gap-y-4 sm:max-w-sm">
+				@if (auth()->user()->password)
+					<x-form.input label="Aktuelles Passwort" name="current_password" type="password" wire:model="currentPassword" autocomplete="current-password" required />
+				@endif
+				<x-form.input label="Neues Passwort" hint="(mind. 8 Zeichen)" name="new_password" type="password" wire:model="password" autocomplete="new-password" minlength="8" required />
+				<x-form.input label="Neues Passwort wiederholen" name="new_password_confirmation" type="password" wire:model="passwordConfirmation" autocomplete="new-password" required />
+			</div>
+		</fieldset>
+		<x-button type="submit" variant="neutral" size="sm" wire:loading.attr="disabled" class="mt-6">Passwort speichern</x-button>
 	</form>
 
 	<form method="POST" action="{{ route('logout') }}" class="mt-12 border-t border-ink/8 pt-6">

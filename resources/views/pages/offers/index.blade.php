@@ -71,6 +71,12 @@ new #[Title('Ich bruuch eis')] class extends Component
 			return;
 		}
 
+		if (! auth()->user()->hasVerifiedEmail()) {
+			$this->redirectRoute('verification.notice', navigate: true);
+
+			return;
+		}
+
 		$offer = Offer::findOrFail($offerId);
 
 		try {
@@ -93,7 +99,7 @@ new #[Title('Ich bruuch eis')] class extends Component
 
 	@auth
 		@if ($this->mySectorIds() === [])
-			<a href="{{ route('settings') }}" wire:navigate class="mt-6 flex items-start gap-x-4 rounded-xl bg-red/6 p-4 hover:bg-red/10">
+			<a href="{{ route('profile') }}" wire:navigate class="mt-6 flex items-start gap-x-4 rounded-xl bg-red/6 p-4 hover:bg-red/10">
 				<x-phosphor-bell-light class="mt-0.5 size-6 shrink-0 text-red" />
 				<span class="flex-1">
 					<span class="block font-semibold">Nie mehr einen freien Platz verpassen</span>
@@ -117,7 +123,7 @@ new #[Title('Ich bruuch eis')] class extends Component
 		<div class="mt-12 flex items-center justify-end gap-x-3">
 			<p class="text-sm/6 text-ink/70">
 				<label for="only-my-sectors">Nur meine</label>
-				<a href="{{ route('settings') }}" wire:navigate class="underline decoration-ink/20 underline-offset-2 hover:decoration-red">Sektoren</a>
+				<a href="{{ route('profile') }}" wire:navigate class="underline decoration-ink/20 underline-offset-2 hover:decoration-red">Sektoren</a>
 				<label for="only-my-sectors">anzeigen</label>
 			</p>
 			<x-form.toggle id="only-my-sectors" name="only_my_sectors" wire:model.live="onlyMySectors" />
