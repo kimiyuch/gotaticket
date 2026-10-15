@@ -1,13 +1,14 @@
 # Got a ticket? – Project status
 
-Handover notes for the next working session. Last updated: 2026-10-15 (passwords, own admin, mail theme).
+Handover notes for the next working session. Last updated: 2026-10-15, end of day (passwords, own admin, mail theme, error pages, SEO/OG, favicon).
 
 ## Starting a new session
 
 1. Open Claude Code in this folder (`~/Jamon.digital/Webroot/gotaticket.ch`) so Laravel Boost's MCP tools are available.
 2. Read this file, then `CLAUDE.md`.
 3. Check the app at https://gotaticket.ch.test (Herd). Run `composer run dev` for Vite + queue worker.
-4. Check "Open points" below.
+4. Check "Open points" below. First thing: ask whether to push the unpushed commits to GitHub (`git log origin/main..main`).
+5. Deploy with `./deploy.sh` after changes (the user has been fine with deploying each finished change; pushing to GitHub only when asked).
 
 ## What it is
 
@@ -62,7 +63,7 @@ UI building blocks: `x-button` (primary/soft/neutral/plain, md/sm), `x-fixture`,
 
 ## Local setup / testing
 
-- Tests: `php artisan test --compact` (58 passing).
+- Tests: `php artisan test --compact` (65 passing).
 - Visual checks without the browser preview: headless Chrome (`--screenshot`) for guest pages; logged-in pages via a small Playwright script outside the repo (log in through the form with a test user).
 - Queue: notifications are queued – run `composer run dev` (includes queue listener) or `php artisan queue:work`.
 - Test users (admins, passwords in git-ignored `database/seeders/test-users.local.json`): patrick@, alex@, pippo@, marcel@example.com. `migrate:fresh --seed` recreates them if the file exists.
@@ -75,7 +76,9 @@ Same method as `joey.web`: `./deploy.sh` (zsh, from the Mac, own SSH key) refuse
 - Bootstrap caches are not protected: stale ones (e.g. a removed service provider) would break `artisan`; `optimize` rebuilds them after every upload.
 - Never touched by deploys: `.env`, `public/.htaccess` (first line `Use php-fpm php84`, managed by the Hostpoint panel; the rest is a copy of ours – update it by hand if ours changes), `storage/`, `database/database.sqlite`.
 - Server `.env`: production, debug off, own `APP_KEY` and VAPID keys, mail via Hostpoint SMTP (`asmtp.mail.hostpoint.ch`, sender `bot@kimiyu.ch`, credentials copied from wallaby), `SESSION_SECURE_COOKIE=true`.
-- Queue: crontab entry every minute, `queue:work --stop-when-empty`.
+- Queue: crontab entry every minute, `queue:work --stop-when-empty` (php84). No `schedule:run` entry yet – add one (append only) when the first scheduled task exists.
+- Mail: app notifications (`FanNotification`) are queued; Laravel's `VerifyEmail` and `ResetPassword` are sent synchronously in the request. Failed jobs land in `failed_jobs` without any alert.
+- Server access: the Hostpoint user hosts many other live sites. Only write inside `~/www/gotaticket.kimiyu.ch`, crontab append-only, never print other sites' secrets, ask before anything destructive.
 - Seeded on the server: sectors and fixtures only (no test users). Admins: register normally, then an existing admin promotes them under `/admin/fans` (the very first admin via tinker on the server).
 
 ## Decisions made (and why) – don't undo without asking
@@ -100,8 +103,12 @@ Same method as `joey.web`: `./deploy.sh` (zsh, from the Mac, own SSH key) refuse
 
 ## Open points / next steps
 
-- Deployed 2026-10-15 to gotaticket.kimiyu.ch with passwords, own admin and mail theme. Users table was reset (locally and live): the only account is the admin m@marceli.to. Locally, `migrate:fresh --seed` brings the test users back.
-- Missing sector codes for Haupttribüne, Sirupkurve, Klubhaus (now editable under `/admin/sektoren`).
+- **Not pushed**: ~20 commits are only local + deployed; GitHub (`origin/main`) is behind. Ask before pushing.
+- Live state (2026-10-15): users table was reset locally and live; admin is m@marceli.to. A second, unverified fan account (marcel.stadelmann@gmail.com) was registered live afterwards. Locally, `migrate:fresh --seed` brings the test users back (and wipes the admin).
+- Suggested, not yet done: queue the verification/reset mails too (so login/register never wait on SMTP), and send a real test mail to check delivery and the new mail design in an inbox.
+- App icons (`apple-touch-icon`, `icons/*`, PWA manifest) are still the ticket on black; favicon is now the red heart. Ask whether to switch them.
+- Missing sector codes for Haupttribüne, Sirupkurve, Klubhaus (editable under `/admin/sektoren`).
 - Web push not yet verified on a real device (iOS only as installed PWA).
-- Match-day reminder; smoother "pass on a received ticket" flow.
-- Later: own sender address (e.g. hallo@gotaticket.ch) and the gotaticket.ch domain.
+- Match-day reminder (needs a `schedule:run` cron line); smoother "pass on a received ticket" flow.
+- Maybe: alert on failed queue jobs.
+- Later: own sender address (e.g. hallo@gotaticket.ch) and the gotaticket.ch domain (then update `APP_URL`, regenerate nothing – sitemap/robots/canonical follow `APP_URL`).
