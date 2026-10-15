@@ -26,6 +26,6 @@ Route::middleware('auth')->group(function () {
         request()->session()->invalidate();
         request()->session()->regenerateToken();
 
-        return redirect()->route('home');
+        return redirect()->route('home')->with('toast', 'Du bist abgemeldet.');
     })->name('logout');
 });

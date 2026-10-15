@@ -26,6 +26,6 @@ class MagicLinkController extends Controller
         Auth::login($user, remember: true);
         $request->session()->regenerate();
 
-        return redirect()->intended(route('dashboard'));
+        return redirect()->intended(route('dashboard'))->with('toast', 'Hoi '.$user->displayName().', du bist eingeloggt.');
     }
 }

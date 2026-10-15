@@ -69,7 +69,7 @@ new #[Title('Platz freigeben')] class extends Component
 
         $notifyMatchingSeekers->handle($offer);
 
-        session()->flash('status', 'Merci! Dein Platz ist freigegeben. Wir melden uns, sobald sich jemand meldet.');
+        session()->flash('toast', 'Merci! Dein Platz ist freigegeben. Wir melden uns, sobald sich jemand meldet.');
 
         $this->redirectRoute('dashboard', navigate: true);
     }

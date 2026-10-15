@@ -38,3 +38,11 @@ it('stores and removes push subscriptions', function () {
     $this->actingAs($user)->deleteJson(route('push-subscriptions.destroy'), ['endpoint' => $payload['endpoint']])->assertNoContent();
     expect($user->pushSubscriptions()->count())->toBe(0);
 });
+
+it('confirms saving with a toast', function () {
+    Livewire::actingAs(User::factory()->create())
+        ->test('pages::settings')
+        ->set('name', 'Pippo')
+        ->call('save')
+        ->assertDispatched('toast', message: 'Einstellungen gespeichert.');
+});

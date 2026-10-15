@@ -59,6 +59,9 @@
             </nav>
         </div>
 
+        <x-toasts />
+        <x-confirm-dialog />
+
         @livewireScripts
     </body>
 </html>

@@ -205,3 +205,14 @@ it('shows all sectors by default and filters to the seeker\'s sectors on request
         ->assertSee('Meinkurve')
         ->assertDontSee($this->offer->sector->name);
 });
+
+it('confirms actions with a toast and reports failures as an error toast', function () {
+    $claim = app(RequestSeats::class)->handle($this->seeker, $this->offer, 1);
+
+    Livewire::actingAs($this->giver)
+        ->test('pages::dashboard')
+        ->call('accept', $claim->id)
+        ->assertDispatched('toast', message: 'Zugesagt. Schick das Ticket jetzt direkt an den Fan.')
+        ->call('accept', $claim->id)
+        ->assertDispatched('toast', type: 'error');
+});

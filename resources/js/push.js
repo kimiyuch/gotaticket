@@ -60,6 +60,7 @@ export function pushToggle() {
                 });
 
                 this.state = 'on';
+                window.Alpine.store('toasts').push('Push-Mitteilungen aktiviert.');
             } finally {
                 this.busy = false;
             }
@@ -78,6 +79,7 @@ export function pushToggle() {
                 }
 
                 this.state = 'off';
+                window.Alpine.store('toasts').push('Push-Mitteilungen deaktiviert.');
             } finally {
                 this.busy = false;
             }

@@ -62,17 +62,13 @@ new #[Title('Einstellungen')] class extends Component
         ]);
         $user->sectors()->sync($this->sectorIds);
 
-        session()->flash('status', 'Gespeichert.');
+        $this->dispatch('toast', message: 'Einstellungen gespeichert.');
     }
 };
 ?>
 
 <div>
     <x-page-header title="Einstellungen" description="Sag uns, wo du gern stehst oder sitzt. Wir melden uns, sobald dort ein Platz frei wird." />
-
-    @if (session('status'))
-        <x-notice class="mt-6">{{ session('status') }}</x-notice>
-    @endif
 
     <form wire:submit="save" class="mt-8 flex flex-col gap-y-12">
         <fieldset>

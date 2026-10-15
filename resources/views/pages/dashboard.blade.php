@@ -62,45 +62,53 @@ new #[Title('Meine Tickets')] class extends Component
             $offer->update(['status' => OfferStatus::Withdrawn]);
         });
 
+        $this->dispatch('toast', message: 'Freigabe zurückgezogen.');
         $this->refresh();
     }
 
     public function accept(int $claimId, AcceptClaim $action): void
     {
-        $this->run(fn () => $action->handle(auth()->user(), Claim::findOrFail($claimId)));
+        $this->run(fn () => $action->handle(auth()->user(), Claim::findOrFail($claimId)), 'Zugesagt. Schick das Ticket jetzt direkt an den Fan.');
     }
 
     public function decline(int $claimId, DeclineClaim $action): void
     {
-        $this->run(fn () => $action->handle(auth()->user(), Claim::findOrFail($claimId)));
+        $this->run(fn () => $action->handle(auth()->user(), Claim::findOrFail($claimId)), 'Anfrage abgelehnt.');
     }
 
     public function markSent(int $claimId, MarkTicketSent $action): void
     {
-        $this->run(fn () => $action->handle(auth()->user(), Claim::findOrFail($claimId)));
+        $this->run(fn () => $action->handle(auth()->user(), Claim::findOrFail($claimId)), 'Merci! Der Fan wurde informiert.');
     }
 
     public function confirmReceipt(int $claimId, ConfirmReceipt $action): void
     {
-        $this->run(fn () => $action->handle(auth()->user(), Claim::findOrFail($claimId)));
+        $this->run(fn () => $action->handle(auth()->user(), Claim::findOrFail($claimId)), 'Ticket erhalten. Viel Spass im Stadion!');
     }
 
     public function cancel(int $claimId, CancelClaim $action): void
     {
-        $this->run(fn () => $action->handle(auth()->user(), Claim::findOrFail($claimId)));
+        $this->run(fn () => $action->handle(auth()->user(), Claim::findOrFail($claimId)), 'Schade! Der Platz ist wieder frei für andere Fans.');
     }
 
     public function report(int $claimId, string $outcome, ReportOutcome $action): void
     {
-        $this->run(fn () => $action->handle(auth()->user(), Claim::findOrFail($claimId), ClaimOutcome::from($outcome)));
+        $this->run(
+            fn () => $action->handle(auth()->user(), Claim::findOrFail($claimId), ClaimOutcome::from($outcome)),
+            'Merci für die Rückmeldung.',
+        );
     }
 
-    private function run(Closure $callback): void
+    /**
+     * Run a claim action and report the outcome as a toast.
+     */
+    private function run(Closure $callback, string $successMessage): void
     {
         try {
             $callback();
+            $this->dispatch('toast', message: $successMessage);
         } catch (ValidationException $exception) {
-            $this->addError('action', $exception->validator->errors()->first());
+            $this->dispatch('toast', message: $exception->validator->errors()->first(), type: 'error');
         }
 
         $this->refresh();
@@ -119,14 +127,6 @@ new #[Title('Meine Tickets')] class extends Component
             <x-phosphor-gear-six class="size-5 text-ink/40" /> Einstellungen
         </x-button>
     </x-page-header>
-
-    @if (session('status'))
-        <x-notice class="mt-6">{{ session('status') }}</x-notice>
-    @endif
-
-    @error('action')
-        <x-notice type="error" class="mt-6">{{ $message }}</x-notice>
-    @enderror
 
     {{-- As seeker --}}
     <section class="mt-12">
@@ -158,7 +158,7 @@ new #[Title('Meine Tickets')] class extends Component
                                 @if (in_array($claim->status, [ClaimStatus::Accepted, ClaimStatus::Sent], true))
                                     <x-button variant="soft" size="sm" wire:click="confirmReceipt({{ $claim->id }})">Ticket erhalten</x-button>
                                 @endif
-                                <x-button variant="plain" size="sm" wire:click="cancel({{ $claim->id }})" wire:confirm="Kannst du wirklich nicht? Dann wird der Platz wieder freigegeben.">Ich chan doch nöd</x-button>
+                                <x-button variant="neutral" size="sm" x-on:click="$store.confirm.ask({ title: 'Kannst du doch nicht?', message: 'Dein Platz wird wieder freigegeben und andere Fans werden benachrichtigt.', confirm: 'Ja, ich chan nöd', cancel: 'Doch, ich gang' }).then((ok) => ok && $wire.cancel({{ $claim->id }}))">Ich chan doch nöd</x-button>
                             </div>
                         @elseif ($claim->status === ClaimStatus::Received)
                             <p class="mt-3 text-base/6 text-ink/60">Viel Spass im Stadion! Falls du doch nicht kannst, gib das Ticket bitte selbst weiter.</p>
@@ -167,7 +167,7 @@ new #[Title('Meine Tickets')] class extends Component
                         @if ($claim->outcome === ClaimOutcome::TicketInvalid)
                             <p class="mt-3 text-base/6 text-red-dark">Du hast gemeldet, dass das Ticket nicht funktioniert hat.</p>
                         @else
-                            <x-button variant="plain" size="sm" wire:click="report({{ $claim->id }}, 'ticket_invalid')" wire:confirm="Hat das Ticket am Eingang nicht funktioniert?" class="mt-3 -ml-3">Ticket hat nicht funktioniert</x-button>
+                            <x-button variant="neutral" size="sm" x-on:click="$store.confirm.ask({ title: 'Ticket hat nicht funktioniert?', message: 'Wir vermerken das beim Fan, der dir das Ticket gegeben hat.', confirm: 'Melden' }).then((ok) => ok && $wire.report({{ $claim->id }}, 'ticket_invalid'))" class="mt-3">Ticket hat nicht funktioniert</x-button>
                         @endif
                     @endif
                 </article>
@@ -226,7 +226,7 @@ new #[Title('Meine Tickets')] class extends Component
                                         @if ($claim->status === ClaimStatus::Requested)
                                             <div class="mt-3 flex flex-wrap gap-2">
                                                 <x-button variant="soft" size="sm" wire:click="accept({{ $claim->id }})">Zusagen</x-button>
-                                                <x-button variant="plain" size="sm" wire:click="decline({{ $claim->id }})">Ablehnen</x-button>
+                                                <x-button variant="neutral" size="sm" wire:click="decline({{ $claim->id }})">Ablehnen</x-button>
                                             </div>
                                         @elseif ($claim->status === ClaimStatus::Accepted)
                                             <x-button variant="soft" size="sm" wire:click="markSent({{ $claim->id }})" class="mt-3">Ticket gesendet</x-button>
@@ -238,7 +238,7 @@ new #[Title('Meine Tickets')] class extends Component
                                             <div class="mt-3 flex flex-wrap items-center gap-2">
                                                 <p class="text-base/6 text-ink/60">War {{ $claim->seeker->displayName() }} da?</p>
                                                 <x-button variant="soft" size="sm" wire:click="report({{ $claim->id }}, 'attended')">Ja</x-button>
-                                                <x-button variant="plain" size="sm" wire:click="report({{ $claim->id }}, 'no_show')" wire:confirm="Wirklich als «nicht erschienen» melden?">Nein</x-button>
+                                                <x-button variant="neutral" size="sm" x-on:click="$store.confirm.ask({ title: 'Nicht erschienen?', message: {{ Js::from('Das wird im Profil von '.$claim->seeker->displayName().' vermerkt.') }}, confirm: 'Als nicht erschienen melden' }).then((ok) => ok && $wire.report({{ $claim->id }}, 'no_show'))">Nein</x-button>
                                             </div>
                                         @endif
                                     @endif
@@ -250,7 +250,7 @@ new #[Title('Meine Tickets')] class extends Component
                     @endif
 
                     @if ($offer->status === OfferStatus::Open && ! $kickedOff && $offer->claims->whereIn('status', [ClaimStatus::Accepted, ClaimStatus::Sent, ClaimStatus::Received])->isEmpty())
-                        <x-button variant="plain" size="sm" wire:click="withdraw({{ $offer->id }})" wire:confirm="Freigabe wirklich zurückziehen?" class="mt-3 -ml-3">Zurückziehen</x-button>
+                        <x-button variant="neutral" size="sm" x-on:click="$store.confirm.ask({ title: 'Freigabe zurückziehen?', message: 'Offene Anfragen werden abgelehnt.', confirm: 'Zurückziehen' }).then((ok) => ok && $wire.withdraw({{ $offer->id }}))" class="mt-3">Zurückziehen</x-button>
                     @endif
                 </article>
             @empty

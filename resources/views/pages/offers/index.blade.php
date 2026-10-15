@@ -79,10 +79,12 @@ new #[Title('Ich bruuch eis')] class extends Component
         try {
             $requestSeats->handle(auth()->user(), $offer, (int) ($this->seats[$offerId] ?? 1));
         } catch (\Illuminate\Validation\ValidationException $exception) {
-            $this->addError("offer.{$offerId}", $exception->validator->errors()->first());
+            $this->dispatch('toast', message: $exception->validator->errors()->first(), type: 'error');
 
             return;
         }
+
+        $this->dispatch('toast', message: "Angefragt! {$offer->giver->displayName()} wird benachrichtigt.");
 
         unset($this->myClaims, $this->fixtures);
     }
@@ -173,7 +175,6 @@ new #[Title('Ich bruuch eis')] class extends Component
                                     <x-button variant="soft" size="sm" wire:click="request({{ $offer->id }})" wire:loading.attr="disabled">Ich gang! Anfragen</x-button>
                                 </div>
                             @endif
-                            @error("offer.{$offer->id}") <p class="mt-2 text-sm/6 text-red-dark">{{ $message }}</p> @enderror
                         </article>
                     @empty
                         <p class="p-4 text-base/6 text-red sm:p-6">Aktuell nichts frei{{ $onlyMySectors && $this->mySectorIds() !== [] ? ' in deinen Sektoren' : '' }}.</p>
