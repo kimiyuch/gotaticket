@@ -4,8 +4,8 @@
 	<x-slot:description>Wir schicken dir einen Link, mit dem du ein neues Passwort setzt.</x-slot:description>
 
 	@if (session('status'))
-		<div class="rounded-xl bg-paper p-6 text-center" role="status">
-			<x-phosphor-envelope-simple-light class="mx-auto size-7 text-red" />
+		<div class="rounded-xl bg-paper p-6" role="status">
+			<x-phosphor-envelope-simple-light class="size-7 text-red" />
 			<p class="mt-4 font-semibold">Check dein Postfach.</p>
 			<p class="mt-1 text-base/6 text-pretty text-ink/60">{{ session('status') }} Der Link ist 60 Minuten gültig.</p>
 		</div>
@@ -17,5 +17,5 @@
 		</form>
 	@endif
 
-	<p class="mt-6 text-center text-sm/6"><a href="{{ route('login') }}" class="text-ink/60 underline decoration-ink/20 underline-offset-2 hover:text-ink">Zurück zum Login</a></p>
+	<p class="mt-6 text-sm/6"><a href="{{ route('login') }}" class="text-ink/60 underline decoration-ink/20 underline-offset-2 hover:text-ink">Zurück zum Login</a></p>
 </x-layouts::auth>

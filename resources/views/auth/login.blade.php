@@ -1,6 +1,7 @@
 <x-layouts::auth>
 	<x-slot:title>Einloggen</x-slot:title>
 	<x-slot:heading>Einloggen</x-slot:heading>
+	<x-slot:description>Schön, bist du da. Logg dich ein, um Plätze freizugeben oder anzufragen.</x-slot:description>
 
 	@if (session('status'))
 		<p class="mb-6 rounded-lg bg-paper px-4 py-3 text-base/6 text-pretty" role="status">{{ session('status') }}</p>

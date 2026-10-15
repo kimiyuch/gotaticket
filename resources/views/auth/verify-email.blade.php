@@ -2,8 +2,8 @@
 	<x-slot:title>E-Mail bestätigen</x-slot:title>
 	<x-slot:heading>E-Mail bestätigen</x-slot:heading>
 
-	<div class="rounded-xl bg-paper p-6 text-center">
-		<x-phosphor-envelope-simple-light class="mx-auto size-7 text-red" />
+	<div class="rounded-xl bg-paper p-6">
+		<x-phosphor-envelope-simple-light class="size-7 text-red" />
 		<p class="mt-4 font-semibold">Fast geschafft.</p>
 		<p class="mt-1 text-base/6 text-pretty text-ink/60">Wir haben dir einen Link an <strong class="font-medium text-ink">{{ auth()->user()->email }}</strong> geschickt. Klick darauf, dann kannst du Plätze freigeben und anfragen.</p>
 

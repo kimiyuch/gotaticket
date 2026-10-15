@@ -1,6 +1,7 @@
 <x-layouts::auth>
 	<x-slot:title>Konto erstellen</x-slot:title>
 	<x-slot:heading>Konto erstellen</x-slot:heading>
+	<x-slot:description>Damit du Plätze freigeben und anfragen kannst. Dauert keine Minute.</x-slot:description>
 
 	<form method="POST" action="{{ route('register') }}">
 		@csrf
