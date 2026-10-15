@@ -91,7 +91,7 @@ Same method as `joey.web`: `./deploy.sh` (zsh, from the Mac, own SSH key) refuse
 - Confirmations as toasts (top right desktop, full-width flush top on mobile); browser `confirm()` replaced by the dialog component.
 - Home hero: text full width + two buttons, no crest/club logo (trademark / would look official), no divider between sections.
 - Accessibility pass done: pointer cursor on all clickables (global rule in `app.css`), ARIA labels with context on repeated buttons, skip link, switch roles, live regions.
-- Favicon: red heart with a white heart inside (`public/favicon.svg` + PNG fallback). App icons (`apple-touch-icon`, `icons/*`) are still the ticket on black.
+- Favicon: Phosphor "heart-straight" (fill), solid brand red (`public/favicon.svg` + PNG fallback). App icons (`apple-touch-icon`, `icons/*`) are still the ticket on black.
 - Auth: Fortify instead of Breeze (Breeze would bring its own views/components; frozen package). Magic link dropped. No social logins. UI built with the ui.sh design skill guidelines.
 - No Filament: own admin so it matches the app and has no heavy dependency.
 - SEO / link previews: `x-seo` in the shared head (title, description per page, canonical, Open Graph, X card). Only `/` and `/ich-bruuch-eis` are indexable, everything else (auth, profile, dashboard, admin, errors) is `noindex`. `robots.txt` and `sitemap.xml` are routes (they follow `APP_URL`). The preview image `public/images/og.png` is static: edit `resources/views/og-image.blade.php` (served at `/og-image` only locally), run `npm run build`, then `./scripts/og-image.sh` (same method as wallaby).
