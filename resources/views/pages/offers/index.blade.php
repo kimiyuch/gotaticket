@@ -13,8 +13,8 @@ use Livewire\Component;
 
 new #[Title('Ich bruuch eis')] class extends Component
 {
-    #[Url(as: 'alle')]
-    public bool $showAllSectors = false;
+    #[Url(as: 'meine')]
+    public bool $onlyMySectors = false;
 
     /** @var array<int, int> Seats the seeker wants, keyed by offer id */
     public array $seats = [];
@@ -35,7 +35,7 @@ new #[Title('Ich bruuch eis')] class extends Component
             ->with(['offers' => fn ($query) => $query
                 ->where('status', OfferStatus::Open)
                 ->when(auth()->check(), fn ($query) => $query->where('user_id', '!=', auth()->id()))
-                ->when(! $this->showAllSectors && $sectorIds !== [], fn ($query) => $query->whereIn('sector_id', $sectorIds))
+                ->when($this->onlyMySectors && $sectorIds !== [], fn ($query) => $query->whereIn('sector_id', $sectorIds))
                 ->with(['sector', 'giver', 'claims'])
                 ->oldest(),
             ])
@@ -102,11 +102,6 @@ new #[Title('Ich bruuch eis')] class extends Component
                 </span>
                 <x-phosphor-caret-right class="size-5 shrink-0 text-ink/40" />
             </a>
-        @else
-            <div class="mt-6 flex items-center gap-x-3">
-                <x-form.toggle id="show-all-sectors" name="show_all_sectors" wire:model.live="showAllSectors" />
-                <label for="show-all-sectors" class="text-base/6">Auch andere Sektoren anzeigen</label>
-            </div>
         @endif
     @else
         <a href="{{ route('login') }}" wire:navigate class="mt-6 flex items-center gap-x-4 rounded-xl bg-paper p-4 hover:bg-ink/5">
@@ -119,7 +114,17 @@ new #[Title('Ich bruuch eis')] class extends Component
         </a>
     @endauth
 
-    <div class="mt-12 flex flex-col gap-y-8">
+    @if (auth()->check() && $this->mySectorIds() !== [])
+        <div class="mt-12 flex items-center justify-end gap-x-3">
+            <p class="text-base/6">
+                <label for="only-my-sectors">Nur meine</label>
+                <a href="{{ route('settings') }}" wire:navigate class="underline decoration-ink/20 underline-offset-2 hover:decoration-red">Sektoren</a>
+            </p>
+            <x-form.toggle id="only-my-sectors" name="only_my_sectors" wire:model.live="onlyMySectors" />
+        </div>
+    @endif
+
+    <div @class(['flex flex-col gap-y-8', 'mt-4' => auth()->check() && $this->mySectorIds() !== [], 'mt-12' => ! (auth()->check() && $this->mySectorIds() !== [])])>
         @forelse ($this->fixtures as $fixture)
             <section wire:key="fixture-{{ $fixture->id }}" class="divide-y divide-ink/8 overflow-hidden rounded-xl ring-1 ring-ink/10">
                 <h2 class="bg-red/4 p-4 sm:p-6">
@@ -171,7 +176,7 @@ new #[Title('Ich bruuch eis')] class extends Component
                             @error("offer.{$offer->id}") <p class="mt-2 text-sm/6 text-red-dark">{{ $message }}</p> @enderror
                         </article>
                     @empty
-                        <p class="p-4 text-base/6 text-red sm:p-6">Aktuell nichts frei{{ ! $showAllSectors && $this->mySectorIds() !== [] ? ' in deinen Sektoren' : '' }}.</p>
+                        <p class="p-4 text-base/6 text-red sm:p-6">Aktuell nichts frei{{ $onlyMySectors && $this->mySectorIds() !== [] ? ' in deinen Sektoren' : '' }}.</p>
                     @endforelse
                 </div>
             </section>

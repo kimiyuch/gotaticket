@@ -191,3 +191,17 @@ it('shows contact details to both sides only after acceptance', function () {
 
     Livewire::actingAs($this->seeker)->test('pages::dashboard')->assertSee($this->giver->email);
 });
+
+it('shows all sectors by default and filters to the seeker\'s sectors on request', function () {
+    $mine = Sector::factory()->create(['name' => 'Stehplatz Meinkurve']);
+    $this->seeker->sectors()->attach($mine);
+    Offer::factory()->create(['sector_id' => $mine->id, 'fixture_id' => $this->offer->fixture_id]);
+
+    Livewire::actingAs($this->seeker)
+        ->test('pages::offers.index')
+        ->assertSee('Meinkurve')
+        ->assertSee($this->offer->sector->name)
+        ->set('onlyMySectors', true)
+        ->assertSee('Meinkurve')
+        ->assertDontSee($this->offer->sector->name);
+});
