@@ -122,7 +122,7 @@ new #[Title('Meine Tickets')] class extends Component
 ?>
 
 <div>
-    <x-page-header title="Meine Tickets">
+    <x-page-header title="Meine Tickets" description="Deine Anfragen und freigegebenen Plätze auf einen Blick. Hier sagst du zu, bestätigst Übergaben und siehst die Kontaktdaten.">
         <x-button variant="plain" size="sm" :href="route('settings')" wire:navigate class="pl-2">
             <x-phosphor-gear-six class="size-4 text-ink/40" /> Einstellungen
         </x-button>
