@@ -72,6 +72,7 @@ UI building blocks: `x-button` (primary/soft/neutral/plain, md/sm), `x-fixture`,
 Same method as `joey.web`: `./deploy.sh` (zsh, from the Mac, own SSH key) refuses uncommitted changes, runs the tests, exports `HEAD` via `git archive`, runs `composer install --no-dev` in a temp folder, rsyncs to `pumutuxu@pumutuxu.myhostpoint.ch:~/www/gotaticket.kimiyu.ch`, then runs `migrate --force`, `optimize` and `queue:restart` on the server.
 
 - Server PHP: always `/usr/local/php84/bin/php` (the default `php` on the CLI is 8.3).
+- Bootstrap caches are not protected: stale ones (e.g. a removed service provider) would break `artisan`; `optimize` rebuilds them after every upload.
 - Never touched by deploys: `.env`, `public/.htaccess` (first line `Use php-fpm php84`, managed by the Hostpoint panel; the rest is a copy of ours – update it by hand if ours changes), `storage/`, `database/database.sqlite`.
 - Server `.env`: production, debug off, own `APP_KEY` and VAPID keys, mail via Hostpoint SMTP (`asmtp.mail.hostpoint.ch`, sender `bot@kimiyu.ch`, credentials copied from wallaby), `SESSION_SECURE_COOKIE=true`.
 - Queue: crontab entry every minute, `queue:work --stop-when-empty`.
@@ -97,8 +98,7 @@ Same method as `joey.web`: `./deploy.sh` (zsh, from the Mac, own SSH key) refuse
 
 ## Open points / next steps
 
-- **Not deployed yet**: passwords, own admin and mail theme are committed locally only. After deploying, the existing accounts on gotaticket.kimiyu.ch have no password: use "Passwort vergessen". The old Filament assets on the server are removed automatically (rsync `--delete`).
-- Make the first admin on the server via tinker (`is_admin = true`), the rest via `/admin/fans`.
+- Deployed 2026-10-15 to gotaticket.kimiyu.ch with passwords, own admin and mail theme. Users table was reset (locally and live): the only account is the admin m@marceli.to. Locally, `migrate:fresh --seed` brings the test users back.
 - Missing sector codes for Haupttribüne, Sirupkurve, Klubhaus (now editable under `/admin/sektoren`).
 - Web push not yet verified on a real device (iOS only as installed PWA).
 - Match-day reminder; smoother "pass on a received ticket" flow.
