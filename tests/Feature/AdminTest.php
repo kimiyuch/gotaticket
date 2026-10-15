@@ -18,10 +18,10 @@ it('renders every admin page for admins', function (string $route) {
 	$this->actingAs($this->admin)->get(route($route))->assertOk();
 })->with(['admin.index', 'admin.fixtures.index', 'admin.fixtures.create', 'admin.sectors.index', 'admin.sectors.create', 'admin.users', 'admin.claims']);
 
-it('keeps fans and guests out of the admin', function () {
-	$this->actingAs(User::factory()->create())->get(route('admin.index'))->assertForbidden();
+it('hides the admin from fans and guests', function () {
+	$this->actingAs(User::factory()->create())->get(route('admin.users'))->assertNotFound();
 	auth()->logout();
-	$this->get(route('admin.index'))->assertRedirect(route('login'));
+	$this->get(route('admin.index'))->assertNotFound();
 });
 
 it('creates and edits a match', function () {

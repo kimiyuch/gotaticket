@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\PushSubscriptionController;
+use App\Http\Middleware\EnsureUserIsAdmin;
 use Illuminate\Support\Facades\Route;
 
 Route::view('/', 'home')->name('home');
@@ -19,7 +20,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 	Route::livewire('/ich-han-eis', 'pages::offers.create')->name('offers.create');
 });
 
-Route::middleware(['auth', 'can:admin'])->prefix('admin')->name('admin.')->group(function () {
+Route::middleware(EnsureUserIsAdmin::class)->prefix('admin')->name('admin.')->group(function () {
 	Route::livewire('/', 'pages::admin.index')->name('index');
 	Route::livewire('/matches', 'pages::admin.fixtures.index')->name('fixtures.index');
 	Route::livewire('/matches/neu', 'pages::admin.fixtures.form')->name('fixtures.create');

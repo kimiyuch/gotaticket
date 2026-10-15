@@ -141,5 +141,4 @@ it('shows guests only the login link on the homepage', function () {
 it('shows styled German error pages', function () {
 	$this->get('/gibts-nicht')->assertNotFound()->assertSee('Diese Seite gibt’s nicht')->assertSee('Zur Startseite');
 
-	$this->actingAs(User::factory()->create())->get(route('admin.index'))->assertForbidden()->assertSee('Kein Zutritt');
 });

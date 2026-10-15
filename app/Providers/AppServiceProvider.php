@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Http\Middleware\EnsureUserIsAdmin;
 use App\Models\User;
 use Illuminate\Auth\Notifications\ResetPassword;
 use Illuminate\Auth\Notifications\VerifyEmail;
@@ -9,6 +10,7 @@ use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Vite;
 use Illuminate\Support\ServiceProvider;
+use Livewire\Livewire;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -26,6 +28,7 @@ class AppServiceProvider extends ServiceProvider
 	public function boot(): void
 	{
 		Gate::define('admin', fn (User $user): bool => $user->canAccessAdmin());
+		Livewire::addPersistentMiddleware([EnsureUserIsAdmin::class]);
 
 		/*
 		 * The stylesheet tag follows right after; the extra preload only triggers
