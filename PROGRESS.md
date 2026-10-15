@@ -1,6 +1,6 @@
 # Got a ticket? – Project status
 
-Handover notes for the next working session. Last updated: 2026-10-15.
+Handover notes for the next working session. Last updated: 2026-10-15 (deployment).
 
 ## Starting a new session
 
@@ -20,6 +20,7 @@ Not affiliated with the club (stated in the footer). Deliberately no club crest/
 - Domain: `gotaticket.ch` (locally `https://gotaticket.ch.test` via Herd, folder `~/Jamon.digital/Webroot/gotaticket.ch`)
 - Repo: https://github.com/kimiyuch/gotaticket (branch `main`)
 - Footer credit: "Mit ♥ gemacht von kimiyu.ch"
+- Staging/production for now: https://gotaticket.kimiyu.ch (Hostpoint, see "Deployment")
 
 ## Stack
 
@@ -64,6 +65,16 @@ UI building blocks: `x-button` (primary/soft/neutral/plain, md/sm), `x-fixture`,
 - Queue: notifications are queued – run `composer run dev` (includes queue listener) or `php artisan queue:work`.
 - Test users (admins, passwords in git-ignored `database/seeders/test-users.local.json`): patrick@, alex@, pippo@, marcel@example.com. `migrate:fresh --seed` recreates them if the file exists.
 
+## Deployment
+
+Same method as `joey.web`: `./deploy.sh` (zsh, from the Mac, own SSH key) refuses uncommitted changes, runs the tests, exports `HEAD` via `git archive`, runs `composer install --no-dev` in a temp folder, rsyncs to `pumutuxu@pumutuxu.myhostpoint.ch:~/www/gotaticket.kimiyu.ch`, then runs `migrate --force`, `optimize` and `queue:restart` on the server.
+
+- Server PHP: always `/usr/local/php84/bin/php` (the default `php` on the CLI is 8.3).
+- Never touched by deploys: `.env`, `public/.htaccess` (first line `Use php-fpm php84`, managed by the Hostpoint panel; the rest is a copy of ours – update it by hand if ours changes), `storage/`, `database/database.sqlite`.
+- Server `.env`: production, debug off, own `APP_KEY` and VAPID keys, mail via Hostpoint SMTP (`asmtp.mail.hostpoint.ch`, sender `bot@kimiyu.ch`, credentials copied from wallaby), `SESSION_SECURE_COOKIE=true`.
+- Queue: crontab entry every minute, `queue:work --stop-when-empty`.
+- Seeded on the server: sectors and fixtures only (no test users). Admins: log in via magic link, then set `is_admin` (and a password) via tinker on the server.
+
 ## Decisions made (and why) – don't undo without asking
 
 - Name "Got a ticket?" = the question fans actually ask at the stadium. Domain gotaticket.ch.
@@ -85,4 +96,6 @@ UI building blocks: `x-button` (primary/soft/neutral/plain, md/sm), `x-fixture`,
 - Web push not yet verified on a real device (needs a deployed HTTPS host; iOS only as installed PWA).
 - Admin: user list / blocking, overview of offers and handovers.
 - Match-day reminder; smoother "pass on a received ticket" flow.
-- Deployment: hosting, real mail delivery (Postmark or Infomaniak), production `.env` incl. VAPID keys.
+- Deployment to gotaticket.kimiyu.ch is live (2026-10-15), but **HTTPS is missing**: activate the Let's Encrypt certificate for the subdomain in the Hostpoint panel (plus HTTPS redirect). Until then login fails (secure cookies) and push cannot work.
+- After HTTPS: test magic-link mail delivery, create the admin accounts, test web push on a phone.
+- Later: own sender address (e.g. hallo@gotaticket.ch) and the gotaticket.ch domain.
