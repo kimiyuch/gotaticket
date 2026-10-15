@@ -2,6 +2,13 @@
 
 Handover notes for the next working session. Last updated: 2026-10-15.
 
+## Starting a new session
+
+1. Open Claude Code in this folder (`~/Jamon.digital/Webroot/gotaticket.ch`) so Laravel Boost's MCP tools are available.
+2. Read this file, then `CLAUDE.md`.
+3. Check the app at https://gotaticket.ch.test (Herd). Run `composer run dev` for Vite + queue worker.
+4. First topic: the user's two bigger issues (see "Open points").
+
 ## What it is
 
 A fan-run platform for FC Winterthur supporters: people who can't attend a home game pass their seat (season ticket or single ticket) on to fans looking for one. **No payments on the platform** – it only connects people; the ticket (PDF / wallet / club portal transfer) is handed over directly between the two fans. Rule of thumb on the platform: free or at face value.
@@ -56,6 +63,20 @@ UI building blocks: `x-button` (primary/soft/neutral/plain, md/sm), `x-fixture`,
 - Tests: `php artisan test --compact` (37 passing).
 - Queue: notifications are queued – run `composer run dev` (includes queue listener) or `php artisan queue:work`.
 - Test users (admins, passwords in git-ignored `database/seeders/test-users.local.json`): patrick@, alex@, pippo@, marcel@example.com. `migrate:fresh --seed` recreates them if the file exists.
+
+## Decisions made (and why) – don't undo without asking
+
+- Name "Got a ticket?" = the question fans actually ask at the stadium. Domain gotaticket.ch.
+- No payments, no ticket files stored on the platform – it only matches and reveals contact details after the giver accepts.
+- Request flow: seeker requests ("Ich gang!") → giver accepts → contacts revealed → giver marks "Ticket gesendet" → seeker confirms "Ticket erhalten". Requests are binding (no-shows hurt season ticket holders), hence the confirmation dialog with the commitment note on every request, even for one seat.
+- Free seats show **all sectors by default**; the "Nur meine Sektoren anzeigen" toggle (right-aligned, small) filters. "Sektoren" links to settings.
+- Header: light (no black bar), horizontal hand-drawn ticket logo without wordmark (`resources/svg/ticket-horizontal.svg`; original square `ticket.svg` is used for app icons). Desktop nav = plain text links, active = subtle red underline. Mobile = bottom tab bar, active = red icon only (no bar).
+- Buttons: one solid red primary per page; secondary actions inside cards are **neutral grey buttons, never text-only/ghost**. Dialogs have an X (top right) plus Abbrechen; confirm label in the request dialog is "Bestätigen".
+- Game display (`x-fixture`): red date line on top, opponent bold, competition as a grey badge top right (on "Meine Tickets" the slot shows seats/sector instead). Free-seats cards have a light red tinted header (`bg-red/4`), not solid red.
+- Icons: Phosphor, light for large, regular for small; only the footer heart is filled.
+- Confirmations as toasts (top right desktop, full-width flush top on mobile); browser `confirm()` replaced by the dialog component.
+- Home hero: text full width + two buttons, no crest/club logo (trademark / would look official), no divider between sections.
+- Accessibility pass done: pointer cursor on all clickables (global rule in `app.css`), ARIA labels with context on repeated buttons, skip link, switch roles, live regions.
 
 ## Open points / next steps
 
