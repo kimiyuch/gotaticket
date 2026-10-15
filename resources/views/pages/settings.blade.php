@@ -90,7 +90,7 @@ new #[Title('Einstellungen')] class extends Component
                         <option value="{{ $count }}">{{ $count }} {{ $count === 1 ? 'Platz' : 'Plätze' }}</option>
                     @endforeach
                 </select>
-                <svg viewBox="0 0 8 5" width="8" height="5" fill="none" class="pointer-events-none col-start-2 row-start-1 place-self-center text-ink/50"><path d="M.5.5 4 4 7.5.5" stroke="currentcolor" /></svg>
+                <svg aria-hidden="true" viewBox="0 0 8 5" width="8" height="5" fill="none" class="pointer-events-none col-start-2 row-start-1 place-self-center text-ink/50"><path d="M.5.5 4 4 7.5.5" stroke="currentcolor" /></svg>
             </div>
         </div>
 
@@ -98,7 +98,7 @@ new #[Title('Einstellungen')] class extends Component
             <legend class="text-base/7 font-semibold">Benachrichtigungen</legend>
             <div class="mt-3 divide-y divide-ink/8 rounded-xl ring-1 ring-ink/10">
                 <div x-data="pushToggle" class="flex items-center justify-between gap-x-4 p-4">
-                    <div>
+                    <div aria-live="polite">
                         <p class="font-medium">Push auf diesem Gerät</p>
                         <p class="text-sm/6 text-pretty text-ink/55" x-show="state === 'on'">Aktiv. Du erfährst sofort, wenn etwas frei wird.</p>
                         <p class="text-sm/6 text-pretty text-ink/55" x-show="state === 'off' || state === 'loading'">Am schnellsten, denn Plätze sind oft in Minuten weg.</p>
@@ -106,8 +106,8 @@ new #[Title('Einstellungen')] class extends Component
                         <p class="text-sm/6 text-pretty text-ink/55" x-show="state === 'unsupported'">Dein Browser unterstützt leider keine Push-Mitteilungen.</p>
                         <p class="text-sm/6 text-pretty text-ink/55" x-show="state === 'needs-install'">Auf dem iPhone: Teilen → «Zum Home-Bildschirm», dann die App von dort öffnen.</p>
                     </div>
-                    <x-button variant="soft" size="sm" x-show="state === 'off'" x-on:click="enable" x-bind:disabled="busy">Aktivieren</x-button>
-                    <x-button variant="plain" size="sm" x-show="state === 'on'" x-on:click="disable" x-bind:disabled="busy">Deaktivieren</x-button>
+                    <x-button variant="soft" size="sm" x-show="state === 'off'" x-on:click="enable" x-bind:disabled="busy" x-bind:aria-busy="busy">Aktivieren</x-button>
+                    <x-button variant="plain" size="sm" x-show="state === 'on'" x-on:click="disable" x-bind:disabled="busy" x-bind:aria-busy="busy">Deaktivieren</x-button>
                 </div>
 
                 <div class="flex items-center justify-between gap-x-4 p-4">

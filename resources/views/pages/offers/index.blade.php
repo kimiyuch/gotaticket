@@ -128,8 +128,8 @@ new #[Title('Ich bruuch eis')] class extends Component
 
     <div @class(['flex flex-col gap-y-8', 'mt-4' => auth()->check() && $this->mySectorIds() !== [], 'mt-12' => ! (auth()->check() && $this->mySectorIds() !== [])])>
         @forelse ($this->fixtures as $fixture)
-            <section wire:key="fixture-{{ $fixture->id }}" class="divide-y divide-ink/8 overflow-hidden rounded-xl ring-1 ring-ink/10">
-                <h2 class="bg-red/4 p-4 sm:p-6">
+            <section wire:key="fixture-{{ $fixture->id }}" aria-labelledby="fixture-{{ $fixture->id }}-title" class="divide-y divide-ink/8 overflow-hidden rounded-xl ring-1 ring-ink/10">
+                <h2 id="fixture-{{ $fixture->id }}-title" class="bg-red/4 p-4 sm:p-6">
                     <x-fixture :fixture="$fixture" size="lg" />
                 </h2>
 
@@ -141,7 +141,7 @@ new #[Title('Ich bruuch eis')] class extends Component
                             $hasActiveClaim = $myClaim && in_array($myClaim->status, \App\Enums\ClaimStatus::active(), true);
                             $record = $offer->giver->reliability();
                         @endphp
-                        <article id="offer-{{ $offer->id }}" wire:key="offer-{{ $offer->id }}" class="scroll-mt-24 p-4 target:bg-red/4 sm:p-6">
+                        <article id="offer-{{ $offer->id }}" wire:key="offer-{{ $offer->id }}" aria-label="{{ $offer->sector->label() }}, {{ $available }} frei" class="scroll-mt-24 p-4 target:bg-red/4 sm:p-6">
                             <div class="flex items-start justify-between gap-x-3">
                                 <div>
                                     <p class="font-semibold">{{ $offer->sector->label() }}</p>
@@ -169,10 +169,10 @@ new #[Title('Ich bruuch eis')] class extends Component
                                                     <option value="{{ $count }}">{{ $count }} {{ $count === 1 ? 'Platz' : 'Plätze' }}</option>
                                                 @endforeach
                                             </select>
-                                            <svg viewBox="0 0 8 5" width="8" height="5" fill="none" class="pointer-events-none col-start-2 row-start-1 place-self-center text-ink/50"><path d="M.5.5 4 4 7.5.5" stroke="currentcolor" /></svg>
+                                            <svg aria-hidden="true" viewBox="0 0 8 5" width="8" height="5" fill="none" class="pointer-events-none col-start-2 row-start-1 place-self-center text-ink/50"><path d="M.5.5 4 4 7.5.5" stroke="currentcolor" /></svg>
                                         </div>
                                     @endif
-                                    <x-button variant="soft" size="sm" wire:click="request({{ $offer->id }})" wire:loading.attr="disabled">Ich gang! Anfragen</x-button>
+                                    <x-button variant="soft" size="sm" wire:click="request({{ $offer->id }})" wire:loading.attr="disabled" aria-label="Plätze anfragen: {{ $offer->sector->label() }} gegen {{ $fixture->opponent }}">Ich gang! Anfragen</x-button>
                                 </div>
                             @endif
                         </article>

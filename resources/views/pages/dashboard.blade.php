@@ -124,21 +124,21 @@ new #[Title('Meine Tickets')] class extends Component
 <div>
     <x-page-header title="Meine Tickets">
         <x-button variant="plain" size="sm" :href="route('settings')" wire:navigate class="pl-2">
-            <x-phosphor-gear-six class="size-5 text-ink/40" /> Einstellungen
+            <x-phosphor-gear-six class="size-4 text-ink/40" /> Einstellungen
         </x-button>
     </x-page-header>
 
     {{-- As seeker --}}
-    <section class="mt-12">
+    <section class="mt-12" aria-labelledby="requests-title">
         <div class="flex items-center justify-between gap-x-4">
-            <h2 class="text-xl font-semibold tracking-tight">Meine Anfragen</h2>
-            <x-button variant="soft" size="sm" :href="route('offers.index')" wire:navigate class="pl-2"><x-phosphor-ticket class="size-5" /> Freie Plätze</x-button>
+            <h2 id="requests-title" class="text-xl font-semibold tracking-tight">Meine Anfragen</h2>
+            <x-button variant="soft" size="sm" :href="route('offers.index')" wire:navigate class="pl-2"><x-phosphor-ticket class="size-4" /> Freie Plätze</x-button>
         </div>
 
         <div class="mt-4 flex flex-col gap-y-3">
             @forelse ($this->claims as $claim)
                 @php($fixture = $claim->offer->fixture)
-                <article wire:key="claim-{{ $claim->id }}" class="rounded-xl p-4 ring-1 ring-ink/10">
+                <article wire:key="claim-{{ $claim->id }}" aria-label="Anfrage für {{ $fixture->opponent }}" class="rounded-xl p-4 ring-1 ring-ink/10">
                     <div class="flex items-start justify-between gap-x-3">
                         <x-fixture :fixture="$fixture">{{ $claim->seats }} × {{ $claim->offer->sector->label() }}</x-fixture>
                         <x-claim-status :claim="$claim" />
@@ -156,9 +156,9 @@ new #[Title('Meine Tickets')] class extends Component
                         @if (in_array($claim->status, [ClaimStatus::Requested, ClaimStatus::Accepted, ClaimStatus::Sent], true))
                             <div class="mt-4 flex flex-wrap gap-2">
                                 @if (in_array($claim->status, [ClaimStatus::Accepted, ClaimStatus::Sent], true))
-                                    <x-button variant="soft" size="sm" wire:click="confirmReceipt({{ $claim->id }})">Ticket erhalten</x-button>
+                                    <x-button variant="soft" size="sm" wire:click="confirmReceipt({{ $claim->id }})" aria-label="Ticket für {{ $fixture->opponent }} erhalten">Ticket erhalten</x-button>
                                 @endif
-                                <x-button variant="neutral" size="sm" x-on:click="$store.confirm.ask({ title: 'Kannst du doch nicht?', message: 'Dein Platz wird wieder freigegeben und andere Fans werden benachrichtigt.', confirm: 'Ja, ich chan nöd', cancel: 'Doch, ich gang' }).then((ok) => ok && $wire.cancel({{ $claim->id }}))">Ich chan doch nöd</x-button>
+                                <x-button variant="neutral" size="sm" aria-haspopup="dialog" aria-label="Anfrage für {{ $fixture->opponent }} zurückziehen" x-on:click="$store.confirm.ask({ title: 'Kannst du doch nicht?', message: 'Dein Platz wird wieder freigegeben und andere Fans werden benachrichtigt.', confirm: 'Ja, ich chan nöd', cancel: 'Doch, ich gang' }).then((ok) => ok && $wire.cancel({{ $claim->id }}))">Ich chan doch nöd</x-button>
                             </div>
                         @elseif ($claim->status === ClaimStatus::Received)
                             <p class="mt-3 text-base/6 text-ink/60">Viel Spass im Stadion! Falls du doch nicht kannst, gib das Ticket bitte selbst weiter.</p>
@@ -167,7 +167,7 @@ new #[Title('Meine Tickets')] class extends Component
                         @if ($claim->outcome === ClaimOutcome::TicketInvalid)
                             <p class="mt-3 text-base/6 text-red-dark">Du hast gemeldet, dass das Ticket nicht funktioniert hat.</p>
                         @else
-                            <x-button variant="neutral" size="sm" x-on:click="$store.confirm.ask({ title: 'Ticket hat nicht funktioniert?', message: 'Wir vermerken das beim Fan, der dir das Ticket gegeben hat.', confirm: 'Melden' }).then((ok) => ok && $wire.report({{ $claim->id }}, 'ticket_invalid'))" class="mt-3">Ticket hat nicht funktioniert</x-button>
+                            <x-button variant="neutral" size="sm" aria-haspopup="dialog" x-on:click="$store.confirm.ask({ title: 'Ticket hat nicht funktioniert?', message: 'Wir vermerken das beim Fan, der dir das Ticket gegeben hat.', confirm: 'Melden' }).then((ok) => ok && $wire.report({{ $claim->id }}, 'ticket_invalid'))" class="mt-3">Ticket hat nicht funktioniert</x-button>
                         @endif
                     @endif
                 </article>
@@ -178,16 +178,16 @@ new #[Title('Meine Tickets')] class extends Component
     </section>
 
     {{-- As giver --}}
-    <section class="mt-12">
+    <section class="mt-12" aria-labelledby="offers-title">
         <div class="flex items-center justify-between gap-x-4">
-            <h2 class="text-xl font-semibold tracking-tight">Freigegeben</h2>
-            <x-button variant="soft" size="sm" :href="route('offers.create')" wire:navigate class="pl-2"><x-phosphor-plus class="size-5" /> Platz freigeben</x-button>
+            <h2 id="offers-title" class="text-xl font-semibold tracking-tight">Freigegeben</h2>
+            <x-button variant="soft" size="sm" :href="route('offers.create')" wire:navigate class="pl-2"><x-phosphor-plus class="size-4" /> Platz freigeben</x-button>
         </div>
 
         <div class="mt-4 flex flex-col gap-y-3">
             @forelse ($this->offers as $offer)
                 @php($kickedOff = $offer->fixture->kickoff_at->isPast())
-                <article wire:key="offer-{{ $offer->id }}" class="rounded-xl p-4 ring-1 ring-ink/10">
+                <article wire:key="offer-{{ $offer->id }}" aria-label="Freigabe für {{ $offer->fixture->opponent }}" class="rounded-xl p-4 ring-1 ring-ink/10">
                     <div class="flex items-start justify-between gap-x-3">
                         <x-fixture :fixture="$offer->fixture">
                             {{ $offer->seats }} × {{ $offer->sector->label() }}@if ($offer->note) · «{{ $offer->note }}»@endif
@@ -225,11 +225,11 @@ new #[Title('Meine Tickets')] class extends Component
                                     @if (! $kickedOff)
                                         @if ($claim->status === ClaimStatus::Requested)
                                             <div class="mt-3 flex flex-wrap gap-2">
-                                                <x-button variant="soft" size="sm" wire:click="accept({{ $claim->id }})">Zusagen</x-button>
-                                                <x-button variant="neutral" size="sm" wire:click="decline({{ $claim->id }})">Ablehnen</x-button>
+                                                <x-button variant="soft" size="sm" wire:click="accept({{ $claim->id }})" aria-label="Anfrage von {{ $claim->seeker->displayName() }} zusagen">Zusagen</x-button>
+                                                <x-button variant="neutral" size="sm" wire:click="decline({{ $claim->id }})" aria-label="Anfrage von {{ $claim->seeker->displayName() }} ablehnen">Ablehnen</x-button>
                                             </div>
                                         @elseif ($claim->status === ClaimStatus::Accepted)
-                                            <x-button variant="soft" size="sm" wire:click="markSent({{ $claim->id }})" class="mt-3">Ticket gesendet</x-button>
+                                            <x-button variant="soft" size="sm" wire:click="markSent({{ $claim->id }})" class="mt-3" aria-label="Ticket an {{ $claim->seeker->displayName() }} gesendet">Ticket gesendet</x-button>
                                         @endif
                                     @elseif (in_array($claim->status, [ClaimStatus::Sent, ClaimStatus::Received], true))
                                         @if ($claim->outcome)
@@ -237,8 +237,8 @@ new #[Title('Meine Tickets')] class extends Component
                                         @else
                                             <div class="mt-3 flex flex-wrap items-center gap-2">
                                                 <p class="text-base/6 text-ink/60">War {{ $claim->seeker->displayName() }} da?</p>
-                                                <x-button variant="soft" size="sm" wire:click="report({{ $claim->id }}, 'attended')">Ja</x-button>
-                                                <x-button variant="neutral" size="sm" x-on:click="$store.confirm.ask({ title: 'Nicht erschienen?', message: {{ Js::from('Das wird im Profil von '.$claim->seeker->displayName().' vermerkt.') }}, confirm: 'Als nicht erschienen melden' }).then((ok) => ok && $wire.report({{ $claim->id }}, 'no_show'))">Nein</x-button>
+                                                <x-button variant="soft" size="sm" wire:click="report({{ $claim->id }}, 'attended')" aria-label="Ja, {{ $claim->seeker->displayName() }} war da">Ja</x-button>
+                                                <x-button variant="neutral" size="sm" aria-haspopup="dialog" aria-label="Nein, {{ $claim->seeker->displayName() }} war nicht da" x-on:click="$store.confirm.ask({ title: 'Nicht erschienen?', message: {{ Js::from('Das wird im Profil von '.$claim->seeker->displayName().' vermerkt.') }}, confirm: 'Als nicht erschienen melden' }).then((ok) => ok && $wire.report({{ $claim->id }}, 'no_show'))">Nein</x-button>
                                             </div>
                                         @endif
                                     @endif
@@ -250,7 +250,7 @@ new #[Title('Meine Tickets')] class extends Component
                     @endif
 
                     @if ($offer->status === OfferStatus::Open && ! $kickedOff && $offer->claims->whereIn('status', [ClaimStatus::Accepted, ClaimStatus::Sent, ClaimStatus::Received])->isEmpty())
-                        <x-button variant="neutral" size="sm" x-on:click="$store.confirm.ask({ title: 'Freigabe zurückziehen?', message: 'Offene Anfragen werden abgelehnt.', confirm: 'Zurückziehen' }).then((ok) => ok && $wire.withdraw({{ $offer->id }}))" class="mt-3">Zurückziehen</x-button>
+                        <x-button variant="neutral" size="sm" aria-haspopup="dialog" aria-label="Freigabe für {{ $offer->fixture->opponent }} zurückziehen" x-on:click="$store.confirm.ask({ title: 'Freigabe zurückziehen?', message: 'Offene Anfragen werden abgelehnt.', confirm: 'Zurückziehen' }).then((ok) => ok && $wire.withdraw({{ $offer->id }}))" class="mt-3">Zurückziehen</x-button>
                     @endif
                 </article>
             @empty

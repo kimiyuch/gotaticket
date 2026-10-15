@@ -25,4 +25,15 @@
     :focus-visible {
         outline-color: var(--color-red);
     }
+
+    /* Tailwind 4 resets the cursor on buttons; everything clickable gets the pointer back. */
+    button:not(:disabled),
+    [role='button']:not([aria-disabled='true']),
+    select:not(:disabled),
+    summary,
+    label:has(input:not(:disabled)),
+    input[type='checkbox']:not(:disabled),
+    input[type='radio']:not(:disabled) {
+        cursor: pointer;
+    }
 }
