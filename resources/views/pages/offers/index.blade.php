@@ -119,14 +119,14 @@ new #[Title('Ich bruuch eis')] class extends Component
         </a>
     @endauth
 
-    <div class="mt-10 flex flex-col gap-y-10">
+    <div class="mt-10 flex flex-col gap-y-4">
         @forelse ($this->fixtures as $fixture)
-            <section wire:key="fixture-{{ $fixture->id }}">
-                <h2 class="border-b border-ink/8 pb-3">
+            <section wire:key="fixture-{{ $fixture->id }}" class="divide-y divide-ink/8 rounded-xl ring-1 ring-ink/10">
+                <h2 class="p-4 sm:p-5">
                     <x-fixture :fixture="$fixture" size="lg" />
                 </h2>
 
-                <div class="mt-4 flex flex-col gap-y-3">
+                <div class="divide-y divide-ink/8">
                     @forelse ($fixture->offers as $offer)
                         @php
                             $available = $offer->availableSeats();
@@ -134,7 +134,7 @@ new #[Title('Ich bruuch eis')] class extends Component
                             $hasActiveClaim = $myClaim && in_array($myClaim->status, \App\Enums\ClaimStatus::active(), true);
                             $record = $offer->giver->reliability();
                         @endphp
-                        <article id="offer-{{ $offer->id }}" wire:key="offer-{{ $offer->id }}" class="scroll-mt-24 rounded-xl p-4 ring-1 ring-ink/10 target:ring-2 target:ring-red">
+                        <article id="offer-{{ $offer->id }}" wire:key="offer-{{ $offer->id }}" class="scroll-mt-24 p-4 last:rounded-b-xl target:bg-red/4 sm:p-5">
                             <div class="flex items-start justify-between gap-x-3">
                                 <div>
                                     <p class="font-semibold">{{ $offer->sector->label() }}</p>
@@ -171,7 +171,7 @@ new #[Title('Ich bruuch eis')] class extends Component
                             @error("offer.{$offer->id}") <p class="mt-2 text-sm/6 text-red-dark">{{ $message }}</p> @enderror
                         </article>
                     @empty
-                        <p class="text-base/6 text-ink/45">Aktuell nichts frei{{ ! $showAllSectors && $this->mySectorIds() !== [] ? ' in deinen Sektoren' : '' }}.</p>
+                        <p class="p-4 text-base/6 text-ink/45 sm:p-5">Aktuell nichts frei{{ ! $showAllSectors && $this->mySectorIds() !== [] ? ' in deinen Sektoren' : '' }}.</p>
                     @endforelse
                 </div>
             </section>
