@@ -115,4 +115,22 @@ return [
 		'name' => env('MAIL_FROM_NAME', env('APP_NAME', 'Laravel')),
 	],
 
+	/*
+	|--------------------------------------------------------------------------
+	| Markdown Mail Settings
+	|--------------------------------------------------------------------------
+	|
+	| Brand theme for notification and markdown mails, see
+	| resources/views/vendor/mail/html/themes/gotaticket.css.
+	|
+	*/
+
+	'markdown' => [
+		'theme' => 'gotaticket',
+
+		'paths' => [
+			resource_path('views/vendor/mail'),
+		],
+	],
+
 ];
