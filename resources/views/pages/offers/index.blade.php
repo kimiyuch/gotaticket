@@ -212,7 +212,7 @@ new #[Title('Ich bruuch eis')] class extends Component
 
                 <div class="mt-6 flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
                     <x-button variant="neutral" x-on:click="$refs.requestDialog.close()">Abbrechen</x-button>
-                    <x-button x-on:click="$wire.request(pick.id, seats); $refs.requestDialog.close()">Ich gang! Anfragen</x-button>
+                    <x-button x-on:click="$wire.request(pick.id, seats); $refs.requestDialog.close()">Bestätigen</x-button>
                 </div>
             </div>
         </template>
