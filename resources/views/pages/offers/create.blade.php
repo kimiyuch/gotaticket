@@ -89,10 +89,7 @@ new #[Title('Platz freigeben')] class extends Component
                     @foreach ($this->fixtures as $fixture)
                         <label wire:key="fixture-{{ $fixture->id }}" class="flex cursor-pointer items-center gap-x-4 px-4 py-3 first:rounded-t-xl last:rounded-b-xl has-checked:bg-red/4">
                             <x-form.radio name="fixture" wire:model="fixtureId" value="{{ $fixture->id }}" />
-                            <span class="flex-1">
-                                <span class="block font-semibold">{{ $fixture->opponent }}</span>
-                                <span class="block text-sm/6 text-ink/55">{{ $fixture->kickoff_at->locale('de_CH')->isoFormat('dd, D. MMMM · HH:mm') }} · {{ $fixture->competition }}</span>
-                            </span>
+                            <x-fixture :fixture="$fixture" class="flex-1" />
                         </label>
                     @endforeach
                 </div>

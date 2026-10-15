@@ -140,11 +140,7 @@ new #[Title('Meine Tickets')] class extends Component
                 @php($fixture = $claim->offer->fixture)
                 <article wire:key="claim-{{ $claim->id }}" class="rounded-xl p-4 ring-1 ring-ink/10">
                     <div class="flex items-start justify-between gap-x-3">
-                        <div>
-                            <p class="font-semibold">{{ $fixture->opponent }}</p>
-                            <p class="text-sm/6 text-ink/55 tabular-nums">{{ $fixture->kickoff_at->locale('de_CH')->isoFormat('dd, D. MMMM · HH:mm') }}</p>
-                            <p class="mt-1 text-base/6">{{ $claim->seats }} × {{ $claim->offer->sector->label() }}</p>
-                        </div>
+                        <x-fixture :fixture="$fixture">{{ $claim->seats }} × {{ $claim->offer->sector->label() }}</x-fixture>
                         <x-claim-status :claim="$claim" />
                     </div>
 
@@ -193,14 +189,9 @@ new #[Title('Meine Tickets')] class extends Component
                 @php($kickedOff = $offer->fixture->kickoff_at->isPast())
                 <article wire:key="offer-{{ $offer->id }}" class="rounded-xl p-4 ring-1 ring-ink/10">
                     <div class="flex items-start justify-between gap-x-3">
-                        <div>
-                            <p class="font-semibold">{{ $offer->fixture->opponent }}</p>
-                            <p class="text-sm/6 text-ink/55 tabular-nums">{{ $offer->fixture->kickoff_at->locale('de_CH')->isoFormat('dd, D. MMMM · HH:mm') }}</p>
-                            <p class="mt-1 text-base/6">{{ $offer->seats }} × {{ $offer->sector->label() }}</p>
-                            @if ($offer->note)
-                                <p class="mt-1 text-base/6 text-ink/60">«{{ $offer->note }}»</p>
-                            @endif
-                        </div>
+                        <x-fixture :fixture="$offer->fixture">
+                            {{ $offer->seats }} × {{ $offer->sector->label() }}@if ($offer->note) · «{{ $offer->note }}»@endif
+                        </x-fixture>
                         @if ($offer->status === OfferStatus::Open)
                             <x-badge color="red" class="tabular-nums">{{ $offer->availableSeats() }} offen</x-badge>
                         @else

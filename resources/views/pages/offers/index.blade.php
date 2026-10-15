@@ -122,9 +122,8 @@ new #[Title('Ich bruuch eis')] class extends Component
     <div class="mt-10 flex flex-col gap-y-10">
         @forelse ($this->fixtures as $fixture)
             <section wire:key="fixture-{{ $fixture->id }}">
-                <h2 class="flex items-baseline justify-between gap-x-4 border-b border-ink/8 pb-3">
-                    <span class="text-xl font-semibold tracking-tight">{{ $fixture->opponent }}</span>
-                    <span class="text-sm/6 text-ink/55 tabular-nums">{{ $fixture->kickoff_at->locale('de_CH')->isoFormat('dd, D. MMM · HH:mm') }}</span>
+                <h2 class="border-b border-ink/8 pb-3">
+                    <x-fixture :fixture="$fixture" size="lg" />
                 </h2>
 
                 <div class="mt-4 flex flex-col gap-y-3">
