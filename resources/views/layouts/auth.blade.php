@@ -12,7 +12,7 @@
 				</a>
 			</p>
 
-			<main id="content" class="w-full max-w-sm sm:rounded-2xl sm:bg-white sm:p-10 sm:shadow-sm sm:ring-1 sm:ring-ink/5">
+			<main id="content" class="w-full max-w-sm sm:rounded-2xl sm:bg-white sm:p-8 sm:shadow-sm sm:ring-1 sm:ring-ink/5">
 				<h1 class="text-2xl font-semibold tracking-tight text-balance">{{ $heading }}</h1>
 				@isset($description)
 					<p class="mt-2 text-base/6 text-pretty text-ink/60">{{ $description }}</p>
