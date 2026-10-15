@@ -4,7 +4,7 @@
 	<x-slot:description>Schön, bist du da. Logg dich ein, um Plätze freizugeben oder anzufragen.</x-slot:description>
 
 	@if (session('status'))
-		<p class="mb-6 rounded-lg bg-paper px-4 py-3 text-base/6 text-pretty" role="status">{{ session('status') }}</p>
+		<p class="mb-6 rounded-lg bg-neutral-100 px-4 py-3 text-base/6 text-pretty" role="status">{{ session('status') }}</p>
 	@endif
 
 	<form method="POST" action="{{ route('login') }}">

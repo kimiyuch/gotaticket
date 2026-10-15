@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="de-CH" class="bg-white antialiased sm:bg-paper">
+<html lang="de-CH" class="bg-white antialiased sm:bg-neutral-50">
 	<head>
 		@include('layouts.partials.head')
 	</head>
