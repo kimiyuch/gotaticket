@@ -1,20 +1,18 @@
 <x-layouts::app>
-	<section>
-		<p class="text-base/7 font-medium text-red">Ticket, aber keine Zeit?</p>
-		<h1 class="mt-2 max-w-[20ch] text-4xl font-semibold tracking-tight text-balance sm:text-5xl">Du chasch nöd? Öpper anders chunnt gern.</h1>
-		<p class="mt-4 max-w-[48ch] text-lg text-pretty text-ink/60">Gib deinen Platz an einen Fan weiter, der ein Ticket sucht. Kostenlos, ohne Zwischenhandel, direkt von Fan zu Fan.</p>
+	<section class="grid items-center gap-8 sm:grid-cols-[3fr_2fr]">
+		<div class="sm:order-1">
+			<p class="text-base/7 font-medium text-red">Ticket, aber keine Zeit?</p>
+			<h1 class="mt-2 max-w-[20ch] text-4xl font-semibold tracking-tight text-balance sm:text-5xl">Du chasch nöd? Öpper anders chunnt gern.</h1>
+			<p class="mt-4 max-w-[48ch] text-lg text-pretty text-ink/60">Gib deinen Platz an einen Fan weiter, der ein Ticket sucht. Kostenlos, ohne Zwischenhandel, direkt von Fan zu Fan.</p>
+			<div class="mt-8 flex flex-wrap gap-3">
+				<x-button :href="route('offers.create')">Ich han eis</x-button>
+				<x-button variant="neutral" :href="route('offers.index')">Ich bruuch eis</x-button>
+			</div>
+		</div>
+		<div class="flex aspect-4/3 items-center justify-center rounded-2xl bg-paper max-sm:-order-1 max-sm:aspect-2/1 sm:order-2">
+			<x-fcw-crest label="FC Winterthur" class="size-32 sm:size-40" />
+		</div>
 	</section>
-
-	<div class="mt-12 grid gap-3 sm:grid-cols-2">
-		<a href="{{ route('offers.create') }}" class="group flex flex-col rounded-2xl bg-red p-6 text-white hover:bg-red-dark focus-visible:outline-2 focus-visible:outline-offset-2">
-			<p class="text-xl font-semibold">Ich han eis</p>
-			<p class="mt-1 text-base/6 text-white/80">Platz für einen Match freigeben.</p>
-		</a>
-		<a href="{{ route('offers.index') }}" class="group flex flex-col rounded-2xl bg-white p-6 ring-1 ring-ink/10 hover:ring-ink/20 focus-visible:outline-2 focus-visible:outline-offset-2">
-			<p class="text-xl font-semibold">Ich bruuch eis</p>
-			<p class="mt-1 text-base/6 text-ink/60">Freie Plätze ansehen und benachrichtigt werden.</p>
-		</a>
-	</div>
 
 	<section class="mt-16 border-t border-ink/8 pt-12">
 		<h2 class="text-xl font-semibold tracking-tight">So funktioniert's</h2>
