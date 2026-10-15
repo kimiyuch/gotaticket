@@ -25,14 +25,14 @@
                         <span class="sr-only">Got a ticket?</span>
                     </a>
 
-                    <nav class="ml-auto flex items-center gap-x-1 max-sm:hidden">
-                        <x-nav-link route="offers.index" icon="ticket">Freie Plätze</x-nav-link>
-                        <x-nav-link route="offers.create" icon="plus-circle">Platz freigeben</x-nav-link>
+                    <nav class="ml-auto flex items-center gap-x-2 max-sm:hidden">
                         @auth
-                            <x-nav-link route="dashboard" icon="user-circle">Meine Tickets</x-nav-link>
+                            <x-nav-link route="dashboard">Meine Tickets</x-nav-link>
                         @else
-                            <x-nav-link route="login" icon="user-circle">Login</x-nav-link>
+                            <x-nav-link route="login">Login</x-nav-link>
                         @endauth
+                        <x-nav-link route="offers.index" variant="neutral">Freie Plätze</x-nav-link>
+                        <x-nav-link route="offers.create" variant="primary">Platz freigeben</x-nav-link>
                     </nav>
                 </div>
             </header>
@@ -49,12 +49,12 @@
             </footer>
 
             <nav class="fixed inset-x-0 bottom-0 z-10 flex border-t border-ink/8 bg-white/95 px-2 pt-1 pb-[max(--spacing(1),env(safe-area-inset-bottom))] backdrop-blur-sm sm:hidden">
-                <x-nav-link route="offers.index" icon="ticket">Freie Plätze</x-nav-link>
-                <x-nav-link route="offers.create" icon="plus-circle">Freigeben</x-nav-link>
+                <x-tab-link route="offers.index" icon="ticket">Freie Plätze</x-tab-link>
+                <x-tab-link route="offers.create" icon="plus-circle">Freigeben</x-tab-link>
                 @auth
-                    <x-nav-link route="dashboard" icon="user-circle">Meine Tickets</x-nav-link>
+                    <x-tab-link route="dashboard" icon="user-circle">Meine Tickets</x-tab-link>
                 @else
-                    <x-nav-link route="login" icon="user-circle">Login</x-nav-link>
+                    <x-tab-link route="login" icon="user-circle">Login</x-tab-link>
                 @endauth
             </nav>
         </div>
