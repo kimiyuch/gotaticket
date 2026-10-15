@@ -208,7 +208,7 @@ new #[Title('Ich bruuch eis')] class extends Component
                     </div>
                 </fieldset>
 
-                <p id="request-dialog-note" class="mt-6 text-sm/6 text-pretty text-ink/60">Mit der Anfrage sagst du zu, dass du wirklich gehst. Wer nicht erscheint, lässt einen Platz leer. Bei Saisonkarten zählt zudem jeder Matchbesuch für die 70%-Regel.</p>
+                <p id="request-dialog-note" class="mt-6 text-sm/5 text-pretty text-ink/60">Mit der Anfrage sagst du zu, dass du wirklich gehst. Wer nicht erscheint, lässt einen Platz leer. Bei Saisonkarten zählt zudem jeder Matchbesuch für die 70%-Regel.</p>
 
                 <div class="mt-6 flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
                     <x-button variant="neutral" x-on:click="$refs.requestDialog.close()">Abbrechen</x-button>
