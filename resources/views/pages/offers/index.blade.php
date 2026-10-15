@@ -188,7 +188,7 @@ new #[Title('Ich bruuch eis')] class extends Component
     <x-dialog x-ref="requestDialog" x-on:click.self="$el.close()" x-on:close="pick = null" aria-labelledby="request-dialog-title" aria-describedby="request-dialog-note">
         <template x-if="pick">
             <div>
-                <h2 id="request-dialog-title" class="text-lg font-semibold">Plätze anfragen</h2>
+                <h2 id="request-dialog-title" class="pr-10 text-lg/7 font-semibold">Plätze anfragen</h2>
 
                 <div class="mt-4 rounded-xl bg-red/4 p-4">
                     <p class="text-sm/6 font-medium text-red tabular-nums" x-text="pick.date"></p>
