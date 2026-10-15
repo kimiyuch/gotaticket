@@ -6,11 +6,11 @@ use Illuminate\Database\Seeder;
 
 class ClaimSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
-    public function run(): void
-    {
-        //
-    }
+	/**
+	 * Run the database seeds.
+	 */
+	public function run(): void
+	{
+		//
+	}
 }

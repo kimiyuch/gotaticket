@@ -13,40 +13,40 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 #[Fillable(['code', 'name', 'kind', 'sort', 'is_active'])]
 class Sector extends Model
 {
-    /** @use HasFactory<SectorFactory> */
-    use HasFactory;
+	/** @use HasFactory<SectorFactory> */
+	use HasFactory;
 
-    /**
-     * @return array<string, string>
-     */
-    protected function casts(): array
-    {
-        return [
-            'kind' => SectorKind::class,
-            'is_active' => 'boolean',
-        ];
-    }
+	/**
+	 * @return array<string, string>
+	 */
+	protected function casts(): array
+	{
+		return [
+			'kind' => SectorKind::class,
+			'is_active' => 'boolean',
+		];
+	}
 
-    /**
-     * Seekers who are interested in this sector.
-     *
-     * @return BelongsToMany<User, $this>
-     */
-    public function seekers(): BelongsToMany
-    {
-        return $this->belongsToMany(User::class);
-    }
+	/**
+	 * Seekers who are interested in this sector.
+	 *
+	 * @return BelongsToMany<User, $this>
+	 */
+	public function seekers(): BelongsToMany
+	{
+		return $this->belongsToMany(User::class);
+	}
 
-    /**
-     * @param  Builder<self>  $query
-     */
-    public function scopeActive(Builder $query): void
-    {
-        $query->where('is_active', true)->orderBy('sort');
-    }
+	/**
+	 * @param Builder<self> $query
+	 */
+	public function scopeActive(Builder $query): void
+	{
+		$query->where('is_active', true)->orderBy('sort');
+	}
 
-    public function label(): string
-    {
-        return $this->code ? "Sektor {$this->code} – {$this->name}" : $this->name;
-    }
+	public function label(): string
+	{
+		return $this->code ? "Sektor {$this->code} – {$this->name}" : $this->name;
+	}
 }

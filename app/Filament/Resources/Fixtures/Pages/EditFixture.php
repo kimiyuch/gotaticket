@@ -8,12 +8,12 @@ use Filament\Resources\Pages\EditRecord;
 
 class EditFixture extends EditRecord
 {
-    protected static string $resource = FixtureResource::class;
+	protected static string $resource = FixtureResource::class;
 
-    protected function getHeaderActions(): array
-    {
-        return [
-            DeleteAction::make(),
-        ];
-    }
+	protected function getHeaderActions(): array
+	{
+		return [
+			DeleteAction::make(),
+		];
+	}
 }

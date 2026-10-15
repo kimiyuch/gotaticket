@@ -2,18 +2,18 @@
 
 return [
 
-    'prefix' => 'phosphor',
+	'prefix' => 'phosphor',
 
-    'fallback' => '',
+	'fallback' => '',
 
-    'class' => '',
+	'class' => '',
 
-    /*
-    | Icons are decorative by default; give meaningful ones an aria-label and aria-hidden="false".
-    */
-    'attributes' => [
-        'aria-hidden' => 'true',
-        'focusable' => 'false',
-    ],
+	/*
+	| Icons are decorative by default; give meaningful ones an aria-label and aria-hidden="false".
+	*/
+	'attributes' => [
+		'aria-hidden' => 'true',
+		'focusable' => 'false',
+	],
 
 ];

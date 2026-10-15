@@ -7,5 +7,5 @@ use Filament\Resources\Pages\CreateRecord;
 
 class CreateFixture extends CreateRecord
 {
-    protected static string $resource = FixtureResource::class;
+	protected static string $resource = FixtureResource::class;
 }

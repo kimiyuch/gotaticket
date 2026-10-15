@@ -9,133 +9,133 @@ use Livewire\Component;
 
 new #[Title('Einstellungen')] class extends Component
 {
-    public string $name = '';
+	public string $name = '';
 
-    public string $phone = '';
+	public string $phone = '';
 
-    /** @var list<int> */
-    public array $sectorIds = [];
+	/** @var list<int> */
+	public array $sectorIds = [];
 
-    public int $wantedSeats = 1;
+	public int $wantedSeats = 1;
 
-    public bool $notifyByMail = true;
+	public bool $notifyByMail = true;
 
-    public function mount(): void
-    {
-        $user = auth()->user();
+	public function mount(): void
+	{
+		$user = auth()->user();
 
-        $this->name = (string) $user->name;
-        $this->phone = (string) $user->phone;
-        $this->sectorIds = $user->sectors()->pluck('sectors.id')->all();
-        $this->wantedSeats = $user->wanted_seats;
-        $this->notifyByMail = $user->notify_by_mail;
-    }
+		$this->name = (string) $user->name;
+		$this->phone = (string) $user->phone;
+		$this->sectorIds = $user->sectors()->pluck('sectors.id')->all();
+		$this->wantedSeats = $user->wanted_seats;
+		$this->notifyByMail = $user->notify_by_mail;
+	}
 
-    /**
-     * @return Collection<int, Sector>
-     */
-    #[Computed]
-    public function sectors(): Collection
-    {
-        return Sector::active()->get();
-    }
+	/**
+	 * @return Collection<int, Sector>
+	 */
+	#[Computed]
+	public function sectors(): Collection
+	{
+		return Sector::active()->get();
+	}
 
-    public function save(): void
-    {
-        $this->validate([
-            'name' => ['required', 'string', 'max:60'],
-            'phone' => ['nullable', 'string', 'max:30', 'regex:/^[0-9 +()\-]*$/'],
-            'sectorIds' => ['array'],
-            'sectorIds.*' => ['integer', Rule::exists('sectors', 'id')->where('is_active', true)],
-            'wantedSeats' => ['required', 'integer', 'min:1', 'max:4'],
-        ], [
-            'name.required' => 'Bitte gib einen Namen an, damit andere Fans wissen, mit wem sie es zu tun haben.',
-            'phone.regex' => 'Bitte gib eine gültige Telefonnummer ein.',
-        ]);
+	public function save(): void
+	{
+		$this->validate([
+			'name' => ['required', 'string', 'max:60'],
+			'phone' => ['nullable', 'string', 'max:30', 'regex:/^[0-9 +()\-]*$/'],
+			'sectorIds' => ['array'],
+			'sectorIds.*' => ['integer', Rule::exists('sectors', 'id')->where('is_active', true)],
+			'wantedSeats' => ['required', 'integer', 'min:1', 'max:4'],
+		], [
+			'name.required' => 'Bitte gib einen Namen an, damit andere Fans wissen, mit wem sie es zu tun haben.',
+			'phone.regex' => 'Bitte gib eine gültige Telefonnummer ein.',
+		]);
 
-        $user = auth()->user();
-        $user->update([
-            'name' => $this->name,
-            'phone' => $this->phone ?: null,
-            'wanted_seats' => $this->wantedSeats,
-            'notify_by_mail' => $this->notifyByMail,
-        ]);
-        $user->sectors()->sync($this->sectorIds);
+		$user = auth()->user();
+		$user->update([
+			'name' => $this->name,
+			'phone' => $this->phone ?: null,
+			'wanted_seats' => $this->wantedSeats,
+			'notify_by_mail' => $this->notifyByMail,
+		]);
+		$user->sectors()->sync($this->sectorIds);
 
-        $this->dispatch('toast', message: 'Einstellungen gespeichert.');
-    }
+		$this->dispatch('toast', message: 'Einstellungen gespeichert.');
+	}
 };
 ?>
 
 <div>
-    <x-page-header title="Einstellungen" description="Sag uns, wo du gern stehst oder sitzt. Wir melden uns, sobald dort ein Platz frei wird." />
+	<x-page-header title="Einstellungen" description="Sag uns, wo du gern stehst oder sitzt. Wir melden uns, sobald dort ein Platz frei wird." />
 
-    <form wire:submit="save" class="mt-8 flex flex-col gap-y-12">
-        <fieldset>
-            <legend class="text-base/7 font-semibold">Ich suche Plätze in</legend>
-            <div class="mt-3 grid grid-cols-2 gap-4">
-                @foreach ($this->sectors as $sector)
-                    <x-form.choice type="checkbox" wire:key="sector-{{ $sector->id }}" name="sectors[]" wire:model="sectorIds" value="{{ $sector->id }}"
-                        :meta="$sector->code ? 'Sektor '.$sector->code : $sector->kind->label()" :title="str($sector->name)->after(' ')" />
-                @endforeach
-            </div>
-            <p class="mt-3 text-sm/6 text-pretty text-ink/55">Ohne Sektor bekommst du keine Benachrichtigungen, kannst aber jederzeit selbst nachschauen.</p>
-        </fieldset>
+	<form wire:submit="save" class="mt-8 flex flex-col gap-y-12">
+		<fieldset>
+			<legend class="text-base/7 font-semibold">Ich suche Plätze in</legend>
+			<div class="mt-3 grid grid-cols-2 gap-4">
+				@foreach ($this->sectors as $sector)
+					<x-form.choice type="checkbox" wire:key="sector-{{ $sector->id }}" name="sectors[]" wire:model="sectorIds" value="{{ $sector->id }}"
+						:meta="$sector->code ? 'Sektor '.$sector->code : $sector->kind->label()" :title="str($sector->name)->after(' ')" />
+				@endforeach
+			</div>
+			<p class="mt-3 text-sm/6 text-pretty text-ink/55">Ohne Sektor bekommst du keine Benachrichtigungen, kannst aber jederzeit selbst nachschauen.</p>
+		</fieldset>
 
-        <div>
-            <label for="wanted-seats" class="text-base/7 font-semibold">Normalerweise brauche ich</label>
-            <div class="mt-3 grid grid-cols-[1fr_--spacing(8)] rounded-lg ring-1 ring-ink/15 sm:max-w-xs">
-                <select id="wanted-seats" name="wanted_seats" wire:model="wantedSeats" class="col-span-full row-start-1 appearance-none rounded-lg bg-white py-2 pr-8 pl-3 text-base/6 focus:outline-2 focus:-outline-offset-1 focus:outline-red">
-                    @foreach (range(1, 4) as $count)
-                        <option value="{{ $count }}">{{ $count }} {{ $count === 1 ? 'Platz' : 'Plätze' }}</option>
-                    @endforeach
-                </select>
-                <svg aria-hidden="true" viewBox="0 0 8 5" width="8" height="5" fill="none" class="pointer-events-none col-start-2 row-start-1 place-self-center text-ink/50"><path d="M.5.5 4 4 7.5.5" stroke="currentcolor" /></svg>
-            </div>
-        </div>
+		<div>
+			<label for="wanted-seats" class="text-base/7 font-semibold">Normalerweise brauche ich</label>
+			<div class="mt-3 grid grid-cols-[1fr_--spacing(8)] rounded-lg ring-1 ring-ink/15 sm:max-w-xs">
+				<select id="wanted-seats" name="wanted_seats" wire:model="wantedSeats" class="col-span-full row-start-1 appearance-none rounded-lg bg-white py-2 pr-8 pl-3 text-base/6 focus:outline-2 focus:-outline-offset-1 focus:outline-red">
+					@foreach (range(1, 4) as $count)
+						<option value="{{ $count }}">{{ $count }} {{ $count === 1 ? 'Platz' : 'Plätze' }}</option>
+					@endforeach
+				</select>
+				<svg aria-hidden="true" viewBox="0 0 8 5" width="8" height="5" fill="none" class="pointer-events-none col-start-2 row-start-1 place-self-center text-ink/50"><path d="M.5.5 4 4 7.5.5" stroke="currentcolor" /></svg>
+			</div>
+		</div>
 
-        <fieldset>
-            <legend class="text-base/7 font-semibold">Benachrichtigungen</legend>
-            <div class="mt-3 divide-y divide-ink/8 rounded-xl ring-1 ring-ink/10">
-                <div x-data="pushToggle" class="flex items-center justify-between gap-x-4 p-4">
-                    <div aria-live="polite">
-                        <p class="font-medium">Push auf diesem Gerät</p>
-                        <p class="text-sm/6 text-pretty text-ink/55" x-show="state === 'on'">Aktiv. Du erfährst sofort, wenn etwas frei wird.</p>
-                        <p class="text-sm/6 text-pretty text-ink/55" x-show="state === 'off' || state === 'loading'">Am schnellsten, denn Plätze sind oft in Minuten weg.</p>
-                        <p class="text-sm/6 text-pretty text-ink/55" x-show="state === 'denied'">Blockiert. Erlaube Mitteilungen in den Browser-Einstellungen.</p>
-                        <p class="text-sm/6 text-pretty text-ink/55" x-show="state === 'unsupported'">Dein Browser unterstützt leider keine Push-Mitteilungen.</p>
-                        <p class="text-sm/6 text-pretty text-ink/55" x-show="state === 'needs-install'">Auf dem iPhone: Teilen → «Zum Home-Bildschirm», dann die App von dort öffnen.</p>
-                    </div>
-                    <x-button variant="soft" size="sm" x-show="state === 'off'" x-on:click="enable" x-bind:disabled="busy" x-bind:aria-busy="busy">Aktivieren</x-button>
-                    <x-button variant="plain" size="sm" x-show="state === 'on'" x-on:click="disable" x-bind:disabled="busy" x-bind:aria-busy="busy">Deaktivieren</x-button>
-                </div>
+		<fieldset>
+			<legend class="text-base/7 font-semibold">Benachrichtigungen</legend>
+			<div class="mt-3 divide-y divide-ink/8 rounded-xl ring-1 ring-ink/10">
+				<div x-data="pushToggle" class="flex items-center justify-between gap-x-4 p-4">
+					<div aria-live="polite">
+						<p class="font-medium">Push auf diesem Gerät</p>
+						<p class="text-sm/6 text-pretty text-ink/55" x-show="state === 'on'">Aktiv. Du erfährst sofort, wenn etwas frei wird.</p>
+						<p class="text-sm/6 text-pretty text-ink/55" x-show="state === 'off' || state === 'loading'">Am schnellsten, denn Plätze sind oft in Minuten weg.</p>
+						<p class="text-sm/6 text-pretty text-ink/55" x-show="state === 'denied'">Blockiert. Erlaube Mitteilungen in den Browser-Einstellungen.</p>
+						<p class="text-sm/6 text-pretty text-ink/55" x-show="state === 'unsupported'">Dein Browser unterstützt leider keine Push-Mitteilungen.</p>
+						<p class="text-sm/6 text-pretty text-ink/55" x-show="state === 'needs-install'">Auf dem iPhone: Teilen → «Zum Home-Bildschirm», dann die App von dort öffnen.</p>
+					</div>
+					<x-button variant="soft" size="sm" x-show="state === 'off'" x-on:click="enable" x-bind:disabled="busy" x-bind:aria-busy="busy">Aktivieren</x-button>
+					<x-button variant="plain" size="sm" x-show="state === 'on'" x-on:click="disable" x-bind:disabled="busy" x-bind:aria-busy="busy">Deaktivieren</x-button>
+				</div>
 
-                <div class="flex items-center justify-between gap-x-4 p-4">
-                    <label for="notify-by-mail">
-                        <span class="block font-medium">E-Mail</span>
-                        <span class="block text-sm/6 text-ink/55">Zusätzlich oder als Ersatz für Push.</span>
-                    </label>
-                    <x-form.toggle id="notify-by-mail" name="notify_by_mail" wire:model="notifyByMail" />
-                </div>
-            </div>
-        </fieldset>
+				<div class="flex items-center justify-between gap-x-4 p-4">
+					<label for="notify-by-mail">
+						<span class="block font-medium">E-Mail</span>
+						<span class="block text-sm/6 text-ink/55">Zusätzlich oder als Ersatz für Push.</span>
+					</label>
+					<x-form.toggle id="notify-by-mail" name="notify_by_mail" wire:model="notifyByMail" />
+				</div>
+			</div>
+		</fieldset>
 
-        <fieldset>
-            <legend class="text-base/7 font-semibold">Über dich</legend>
-            <p class="mt-1 text-sm/6 text-pretty text-ink/55">Wird der anderen Person erst angezeigt, wenn eine Übergabe zugesagt ist.</p>
+		<fieldset>
+			<legend class="text-base/7 font-semibold">Über dich</legend>
+			<p class="mt-1 text-sm/6 text-pretty text-ink/55">Wird der anderen Person erst angezeigt, wenn eine Übergabe zugesagt ist.</p>
 
-            <div class="mt-4 flex flex-col gap-y-4 sm:max-w-sm">
-                <x-form.input label="Name" name="name" wire:model="name" autocomplete="name" maxlength="60" placeholder="z.B. Pippo" />
-                <x-form.input label="Telefon / WhatsApp" hint="(optional)" name="phone" type="tel" wire:model="phone" autocomplete="tel" placeholder="079 123 45 67" />
-                <p class="text-sm/6 text-ink/55">E-Mail: {{ auth()->user()->email }}</p>
-            </div>
-        </fieldset>
+			<div class="mt-4 flex flex-col gap-y-4 sm:max-w-sm">
+				<x-form.input label="Name" name="name" wire:model="name" autocomplete="name" maxlength="60" placeholder="z.B. Pippo" />
+				<x-form.input label="Telefon / WhatsApp" hint="(optional)" name="phone" type="tel" wire:model="phone" autocomplete="tel" placeholder="079 123 45 67" />
+				<p class="text-sm/6 text-ink/55">E-Mail: {{ auth()->user()->email }}</p>
+			</div>
+		</fieldset>
 
-        <x-button type="submit" wire:loading.attr="disabled" class="w-full sm:w-auto sm:self-start">Speichern</x-button>
-    </form>
+		<x-button type="submit" wire:loading.attr="disabled" class="w-full sm:w-auto sm:self-start">Speichern</x-button>
+	</form>
 
-    <form method="POST" action="{{ route('logout') }}" class="mt-12 border-t border-ink/8 pt-6">
-        @csrf
-        <x-button type="submit" variant="plain" size="sm" class="-ml-3">Abmelden</x-button>
-    </form>
+	<form method="POST" action="{{ route('logout') }}" class="mt-12 border-t border-ink/8 pt-6">
+		@csrf
+		<x-button type="submit" variant="plain" size="sm" class="-ml-3">Abmelden</x-button>
+	</form>
 </div>

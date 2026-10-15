@@ -8,12 +8,12 @@ use Filament\Resources\Pages\ListRecords;
 
 class ListSectors extends ListRecords
 {
-    protected static string $resource = SectorResource::class;
+	protected static string $resource = SectorResource::class;
 
-    protected function getHeaderActions(): array
-    {
-        return [
-            CreateAction::make(),
-        ];
-    }
+	protected function getHeaderActions(): array
+	{
+		return [
+			CreateAction::make(),
+		];
+	}
 }

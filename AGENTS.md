@@ -1,4 +1,14 @@
 <laravel-boost-guidelines>
+=== .ai/formatting rules ===
+
+# Code Formatting
+
+- All files are indented with tabs, never spaces (see `.editorconfig`). Exceptions: YAML and Markdown.
+- PHP is formatted with PHP-CS-Fixer (`.php-cs-fixer.dist.php`), not Pint. Pint cannot indent with tabs, so do not install or run it.
+- After changing PHP files, run `composer format` (fix) or `composer format:check` (dry run).
+- Blade, JS and CSS are not covered by the fixer; indent them with tabs by hand.
+- Built assets in `public/build` are committed: run `npm run build` before committing frontend changes.
+
 === foundation rules ===
 
 # Laravel Boost Guidelines
@@ -98,6 +108,23 @@ This project has domain-specific skills available in `**/skills/**`. You MUST ac
 - Laravel can be deployed using [Laravel Cloud](https://cloud.laravel.com/), which is the fastest way to deploy and scale production Laravel applications.
 - Activate the `deploying-to-cloud` skill whenever deploying to Laravel Cloud, configuring Cloud environments or resources, using the Cloud CLI, or troubleshooting Cloud deployments.
 
+=== herd rules ===
+
+# Laravel Herd
+
+- The application is served by Laravel Herd at `https?://[kebab-case-project-dir].test`. Use the `get-absolute-url` tool to generate valid URLs. Never run commands to serve the site. It is always available.
+- Use the `herd` CLI to manage services, PHP versions, and sites (e.g. `herd sites`, `herd services:start <service>`, `herd php:list`). Run `herd list` to discover all available commands.
+
+=== tests rules ===
+
+# Test Enforcement
+
+- Add or update tests for behavior and logic changes when a test provides meaningful regression coverage.
+- Pure copy, styling, and layout-only changes do not require new or updated tests.
+- When test coverage applies, run the affected tests and ensure they pass.
+- Test the changed behavior and its important failure modes, but do not add tests beyond them.
+- Read the `testing-best-practices` skill before writing tests.
+
 === laravel/core rules ===
 
 # Do Things the Laravel Way
@@ -131,13 +158,6 @@ This project has domain-specific skills available in `**/skills/**`. You MUST ac
 - Livewire allows you to build dynamic, reactive interfaces in PHP without writing JavaScript.
 - You can use Alpine.js for client-side interactions instead of JavaScript frameworks.
 - Keep state server-side so the UI reflects it. Validate and authorize in actions as you would in HTTP requests.
-
-=== pint/core rules ===
-
-# Laravel Pint Code Formatter
-
-- If you have modified any PHP files, you must run `vendor/bin/pint --dirty --format agent` before finalizing changes to ensure your code matches the project's expected style.
-- Do not run `vendor/bin/pint --test --format agent`, simply run `vendor/bin/pint --format agent` to fix any formatting issues.
 
 === pest/core rules ===
 

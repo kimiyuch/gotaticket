@@ -14,19 +14,19 @@ use Illuminate\Database\Eloquent\Factories\Factory;
  */
 class OfferFactory extends Factory
 {
-    /**
-     * Define the model's default state.
-     *
-     * @return array<string, mixed>
-     */
-    public function definition(): array
-    {
-        return [
-            'fixture_id' => Fixture::factory(),
-            'user_id' => User::factory(),
-            'sector_id' => Sector::factory(),
-            'seats' => 1,
-            'status' => OfferStatus::Open,
-        ];
-    }
+	/**
+	 * Define the model's default state.
+	 *
+	 * @return array<string, mixed>
+	 */
+	public function definition(): array
+	{
+		return [
+			'fixture_id' => Fixture::factory(),
+			'user_id' => User::factory(),
+			'sector_id' => Sector::factory(),
+			'seats' => 1,
+			'status' => OfferStatus::Open,
+		];
+	}
 }

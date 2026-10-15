@@ -9,31 +9,31 @@
  * for margins, paddings and gaps. Control heights: buttons/inputs 40px, small buttons 32px, badges 24px.
  */
 @theme {
-    --font-sans: 'Figtree Variable', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
-        'Segoe UI Symbol', 'Noto Color Emoji';
+	--font-sans: 'Figtree Variable', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
+		'Segoe UI Symbol', 'Noto Color Emoji';
 
-    /* FC Winterthur brand colours, taken from fcwinterthur.ch */
-    --color-red: #d10a10;
-    --color-red-dark: #b5000d;
-    --color-ink: #120a01;
-    --color-paper: #f6f4f0;
-    --color-line: #e5e3df;
+	/* FC Winterthur brand colours, taken from fcwinterthur.ch */
+	--color-red: #d10a10;
+	--color-red-dark: #b5000d;
+	--color-ink: #120a01;
+	--color-paper: #f6f4f0;
+	--color-line: #e5e3df;
 }
 
 @layer base {
-    /* Same focus colour everywhere, matching the brand. */
-    :focus-visible {
-        outline-color: var(--color-red);
-    }
+	/* Same focus colour everywhere, matching the brand. */
+	:focus-visible {
+		outline-color: var(--color-red);
+	}
 
-    /* Tailwind 4 resets the cursor on buttons; everything clickable gets the pointer back. */
-    button:not(:disabled),
-    [role='button']:not([aria-disabled='true']),
-    select:not(:disabled),
-    summary,
-    label:has(input:not(:disabled)),
-    input[type='checkbox']:not(:disabled),
-    input[type='radio']:not(:disabled) {
-        cursor: pointer;
-    }
+	/* Tailwind 4 resets the cursor on buttons; everything clickable gets the pointer back. */
+	button:not(:disabled),
+	[role='button']:not([aria-disabled='true']),
+	select:not(:disabled),
+	summary,
+	label:has(input:not(:disabled)),
+	input[type='checkbox']:not(:disabled),
+	input[type='radio']:not(:disabled) {
+		cursor: pointer;
+	}
 }

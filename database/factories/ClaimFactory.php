@@ -13,18 +13,18 @@ use Illuminate\Database\Eloquent\Factories\Factory;
  */
 class ClaimFactory extends Factory
 {
-    /**
-     * Define the model's default state.
-     *
-     * @return array<string, mixed>
-     */
-    public function definition(): array
-    {
-        return [
-            'offer_id' => Offer::factory(),
-            'user_id' => User::factory(),
-            'seats' => 1,
-            'status' => ClaimStatus::Requested,
-        ];
-    }
+	/**
+	 * Define the model's default state.
+	 *
+	 * @return array<string, mixed>
+	 */
+	public function definition(): array
+	{
+		return [
+			'offer_id' => Offer::factory(),
+			'user_id' => User::factory(),
+			'seats' => 1,
+			'status' => ClaimStatus::Requested,
+		];
+	}
 }
