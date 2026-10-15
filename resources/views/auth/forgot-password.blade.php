@@ -4,11 +4,7 @@
 	<x-slot:description>Wir schicken dir einen Link, mit dem du ein neues Passwort setzt.</x-slot:description>
 
 	@if (session('status'))
-		<div class="rounded-xl bg-neutral-100 p-6" role="status">
-			<x-phosphor-envelope-simple-light class="size-7 text-red" />
-			<p class="mt-4 font-semibold">Check dein Postfach.</p>
-			<p class="mt-1 text-base/6 text-pretty text-ink/60">{{ session('status') }} Der Link ist 60 Minuten gültig.</p>
-		</div>
+		<p class="text-base/6 text-pretty text-ink/60" role="status"><strong class="font-medium text-ink">Check dein Postfach.</strong> {{ session('status') }} Der Link ist 60 Minuten gültig.</p>
 	@else
 		<form method="POST" action="{{ route('password.email') }}">
 			@csrf

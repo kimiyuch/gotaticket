@@ -1,20 +1,15 @@
 <x-layouts::auth>
 	<x-slot:title>E-Mail bestätigen</x-slot:title>
 	<x-slot:heading>E-Mail bestätigen</x-slot:heading>
+	<x-slot:description>Wir haben dir einen Link an <strong class="font-medium text-ink">{{ auth()->user()->email }}</strong> geschickt. Klick darauf, dann kannst du Plätze freigeben und anfragen.</x-slot:description>
 
-	<div class="rounded-xl bg-neutral-100 p-6">
-		<x-phosphor-envelope-simple-light class="size-7 text-red" />
-		<p class="mt-4 font-semibold">Fast geschafft.</p>
-		<p class="mt-1 text-base/6 text-pretty text-ink/60">Wir haben dir einen Link an <strong class="font-medium text-ink">{{ auth()->user()->email }}</strong> geschickt. Klick darauf, dann kannst du Plätze freigeben und anfragen.</p>
-
-		@if (session('status') === 'verification-link-sent')
-			<p class="mt-4 text-base/6 font-medium text-red-dark" role="status">Ein neuer Link ist unterwegs.</p>
-		@endif
-	</div>
+	@if (session('status') === 'verification-link-sent')
+		<p class="mb-6 text-base/6 font-medium text-red-dark" role="status">Ein neuer Link ist unterwegs.</p>
+	@endif
 
 	<form method="POST" action="{{ route('verification.send') }}">
 		@csrf
-		<x-button type="submit" class="mt-8 w-full">Link nochmals schicken</x-button>
+		<x-button type="submit" class="w-full">Link nochmals schicken</x-button>
 	</form>
 
 	<div class="mt-6 flex flex-wrap items-center justify-between gap-x-4 gap-y-2 text-sm/6">
