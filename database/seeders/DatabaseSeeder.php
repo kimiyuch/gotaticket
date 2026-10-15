@@ -15,7 +15,7 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        $this->call([SectorSeeder::class, FixtureSeeder::class]);
+        $this->call([SectorSeeder::class, FixtureSeeder::class, TestUserSeeder::class]);
 
         User::factory()->admin()->create([
             'name' => 'Admin',

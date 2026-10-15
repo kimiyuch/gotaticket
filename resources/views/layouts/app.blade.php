@@ -17,6 +17,18 @@
                     <x-logo class="size-10 -rotate-6" />
                     <span class="text-lg font-extrabold tracking-tight">Got a ticket?</span>
                 </a>
+
+                <nav class="ml-auto flex items-center gap-4 text-sm font-semibold">
+                    @auth
+                        <a href="{{ route('dashboard') }}" wire:navigate class="text-white/80 hover:text-white">Meine Tickets</a>
+                        <form method="POST" action="{{ route('logout') }}">
+                            @csrf
+                            <button type="submit" class="text-white/50 hover:text-white">Logout</button>
+                        </form>
+                    @else
+                        <a href="{{ route('login') }}" wire:navigate class="text-white/80 hover:text-white">Login</a>
+                    @endauth
+                </nav>
             </div>
         </header>
 

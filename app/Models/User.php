@@ -65,6 +65,14 @@ class User extends Authenticatable implements FilamentUser
         return $this->hasMany(Claim::class);
     }
 
+    /**
+     * Name shown to other fans; falls back to the part of the email before the @.
+     */
+    public function displayName(): string
+    {
+        return $this->name ?: str($this->email)->before('@')->toString();
+    }
+
     public function isBlocked(): bool
     {
         return $this->blocked_at !== null;

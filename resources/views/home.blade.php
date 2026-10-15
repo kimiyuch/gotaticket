@@ -10,7 +10,7 @@
     </section>
 
     <div class="mt-8 grid gap-3 sm:grid-cols-2">
-        <a href="#" class="rounded-2xl bg-red px-5 py-5 text-white shadow-sm transition hover:bg-red-dark">
+        <a href="{{ route('offers.create') }}" class="rounded-2xl bg-red px-5 py-5 text-white shadow-sm transition hover:bg-red-dark">
             <span class="block text-xl font-bold">Ich han eis</span>
             <span class="block text-sm text-white/80">Platz für einen Match freigeben</span>
         </a>
