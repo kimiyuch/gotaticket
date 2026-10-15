@@ -77,7 +77,7 @@ new #[Title('Einstellungen')] class extends Component
     <form wire:submit="save" class="mt-8 flex flex-col gap-y-10">
         <fieldset>
             <legend class="text-base/7 font-semibold">Ich suche Plätze in</legend>
-            <div class="mt-3 grid grid-cols-2 gap-2">
+            <div class="mt-3 grid grid-cols-2 gap-4">
                 @foreach ($this->sectors as $sector)
                     <x-form.choice type="checkbox" wire:key="sector-{{ $sector->id }}" name="sectors[]" wire:model="sectorIds" value="{{ $sector->id }}"
                         :meta="$sector->code ? 'Sektor '.$sector->code : $sector->kind->label()" :title="str($sector->name)->after(' ')" />

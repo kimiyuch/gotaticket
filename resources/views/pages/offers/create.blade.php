@@ -98,7 +98,7 @@ new #[Title('Platz freigeben')] class extends Component
 
             <fieldset>
                 <legend class="text-base/7 font-semibold">Sektor</legend>
-                <div class="mt-3 grid grid-cols-2 gap-2">
+                <div class="mt-3 grid grid-cols-2 gap-4">
                     @foreach ($this->sectors as $sector)
                         <x-form.choice wire:key="sector-{{ $sector->id }}" name="sector" wire:model="sectorId" value="{{ $sector->id }}"
                             :meta="$sector->code ? 'Sektor '.$sector->code : $sector->kind->label()" :title="str($sector->name)->after(' ')" />
@@ -109,7 +109,7 @@ new #[Title('Platz freigeben')] class extends Component
 
             <fieldset>
                 <legend class="text-base/7 font-semibold">Anzahl Plätze</legend>
-                <div class="mt-3 grid grid-cols-4 gap-2 sm:max-w-xs">
+                <div class="mt-3 grid grid-cols-4 gap-4 sm:max-w-xs">
                     @foreach (range(1, $this::MAX_SEATS) as $count)
                         <label wire:key="seats-{{ $count }}" class="flex cursor-pointer items-center justify-center rounded-lg py-2.5 text-base/6 font-semibold tabular-nums ring-1 ring-ink/10 hover:ring-ink/20 has-checked:bg-red/4 has-checked:ring-2 has-checked:ring-red has-focus-visible:outline-2 has-focus-visible:outline-offset-2 has-focus-visible:outline-red">
                             <input type="radio" name="seats" wire:model="seats" value="{{ $count }}" class="sr-only" aria-label="{{ $count }} {{ $count === 1 ? 'Platz' : 'Plätze' }}">
