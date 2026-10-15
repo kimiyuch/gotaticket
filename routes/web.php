@@ -6,6 +6,13 @@ use Illuminate\Support\Facades\Route;
 
 Route::view('/', 'home')->name('home');
 Route::livewire('/ich-bruuch-eis', 'pages::offers.index')->name('offers.index');
+Route::get('/robots.txt', fn () => response("User-agent: *\nDisallow:\n\nSitemap: ".route('sitemap')."\n")->header('Content-Type', 'text/plain'))->name('robots');
+Route::get('/sitemap.xml', fn () => response()->view('sitemap')->header('Content-Type', 'application/xml'))->name('sitemap');
+
+// Source page for the Open Graph image; only reachable during local development.
+if (app()->isLocal()) {
+	Route::view('/og-image', 'og-image');
+}
 
 Route::middleware('auth')->group(function () {
 	Route::livewire('/meine-tickets', 'pages::dashboard')->name('dashboard');

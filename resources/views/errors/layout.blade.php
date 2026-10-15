@@ -7,6 +7,7 @@
 		<meta name="theme-color" content="#ffffff">
 		<link rel="icon" href="/favicon.svg" type="image/svg+xml">
 		<link rel="icon" href="/favicon.png" type="image/png">
+		<meta name="robots" content="noindex, nofollow">
 		<title>@yield('title') · {{ config('app.name') }}</title>
 		@vite(['resources/css/app.css'])
 	</head>

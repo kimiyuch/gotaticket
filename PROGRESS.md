@@ -94,6 +94,8 @@ Same method as `joey.web`: `./deploy.sh` (zsh, from the Mac, own SSH key) refuse
 - Favicon: red heart with a white heart inside (`public/favicon.svg` + PNG fallback). App icons (`apple-touch-icon`, `icons/*`) are still the ticket on black.
 - Auth: Fortify instead of Breeze (Breeze would bring its own views/components; frozen package). Magic link dropped. No social logins. UI built with the ui.sh design skill guidelines.
 - No Filament: own admin so it matches the app and has no heavy dependency.
+- SEO / link previews: `x-seo` in the shared head (title, description per page, canonical, Open Graph, X card). Only `/` and `/ich-bruuch-eis` are indexable, everything else (auth, profile, dashboard, admin, errors) is `noindex`. `robots.txt` and `sitemap.xml` are routes (they follow `APP_URL`). The preview image `public/images/og.png` is static: edit `resources/views/og-image.blade.php` (served at `/og-image` only locally), run `npm run build`, then `./scripts/og-image.sh` (same method as wallaby).
+- Admin area is invisible to non-admins: `/admin/*` answers 404 for guests and fans (`EnsureUserIsAdmin`, also registered as Livewire persistent middleware). Error pages are own, German, standalone (`resources/views/errors`).
 - Emails: Laravel markdown mail with own theme `resources/views/vendor/mail/html/themes/gotaticket.css` (config `mail.markdown.theme`), logo `public/mail/logo.png`, self-hosted Figtree `public/mail/figtree.woff2` (no Google Fonts), left-aligned red button, German footer with link to the profile. German texts for the verification/reset mails in `AppServiceProvider`.
 
 ## Open points / next steps

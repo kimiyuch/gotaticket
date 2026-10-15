@@ -9,7 +9,7 @@
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <meta name="apple-mobile-web-app-title" content="Got a ticket?">
 
-<title>{{ isset($title) ? $title.' · ' : '' }}{{ config('app.name') }}</title>
+<x-seo :title="$title ?? null" />
 
 @vite(['resources/css/app.css', 'resources/js/app.js'])
 @livewireStyles
