@@ -119,10 +119,10 @@ new #[Title('Ich bruuch eis')] class extends Component
         </a>
     @endauth
 
-    <div class="mt-10 flex flex-col gap-y-8">
+    <div class="mt-12 flex flex-col gap-y-8">
         @forelse ($this->fixtures as $fixture)
             <section wire:key="fixture-{{ $fixture->id }}" class="divide-y divide-ink/8 overflow-hidden rounded-xl ring-1 ring-ink/10">
-                <h2 class="bg-red/4 p-4 sm:p-5">
+                <h2 class="bg-red/4 p-4 sm:p-6">
                     <x-fixture :fixture="$fixture" size="lg" />
                 </h2>
 
@@ -134,7 +134,7 @@ new #[Title('Ich bruuch eis')] class extends Component
                             $hasActiveClaim = $myClaim && in_array($myClaim->status, \App\Enums\ClaimStatus::active(), true);
                             $record = $offer->giver->reliability();
                         @endphp
-                        <article id="offer-{{ $offer->id }}" wire:key="offer-{{ $offer->id }}" class="scroll-mt-24 p-4 target:bg-red/4 sm:p-5">
+                        <article id="offer-{{ $offer->id }}" wire:key="offer-{{ $offer->id }}" class="scroll-mt-24 p-4 target:bg-red/4 sm:p-6">
                             <div class="flex items-start justify-between gap-x-3">
                                 <div>
                                     <p class="font-semibold">{{ $offer->sector->label() }}</p>
@@ -157,7 +157,7 @@ new #[Title('Ich bruuch eis')] class extends Component
                                 <div class="mt-4 flex items-center gap-x-2">
                                     @if ($available > 1)
                                         <div class="inline-grid grid-cols-[1fr_--spacing(8)] rounded-lg ring-1 ring-ink/15">
-                                            <select name="seats-{{ $offer->id }}" wire:model="seats.{{ $offer->id }}" aria-label="Anzahl Plätze" class="col-span-full row-start-1 appearance-none rounded-lg bg-white py-1.5 pr-8 pl-3 text-base/6 tabular-nums focus:outline-2 focus:-outline-offset-1 focus:outline-red">
+                                            <select name="seats-{{ $offer->id }}" wire:model="seats.{{ $offer->id }}" aria-label="Anzahl Plätze" class="col-span-full row-start-1 appearance-none rounded-lg bg-white py-1 pr-8 pl-3 text-base/6 tabular-nums focus:outline-2 focus:-outline-offset-1 focus:outline-red">
                                                 @foreach (range(1, $available) as $count)
                                                     <option value="{{ $count }}">{{ $count }} {{ $count === 1 ? 'Platz' : 'Plätze' }}</option>
                                                 @endforeach
@@ -171,12 +171,12 @@ new #[Title('Ich bruuch eis')] class extends Component
                             @error("offer.{$offer->id}") <p class="mt-2 text-sm/6 text-red-dark">{{ $message }}</p> @enderror
                         </article>
                     @empty
-                        <p class="p-4 text-base/6 text-red sm:p-5">Aktuell nichts frei{{ ! $showAllSectors && $this->mySectorIds() !== [] ? ' in deinen Sektoren' : '' }}.</p>
+                        <p class="p-4 text-base/6 text-red sm:p-6">Aktuell nichts frei{{ ! $showAllSectors && $this->mySectorIds() !== [] ? ' in deinen Sektoren' : '' }}.</p>
                     @endforelse
                 </div>
             </section>
         @empty
-            <p class="rounded-xl bg-paper p-5 text-ink/60">Aktuell sind keine Heimspiele erfasst.</p>
+            <p class="rounded-xl bg-paper p-6 text-ink/60">Aktuell sind keine Heimspiele erfasst.</p>
         @endforelse
     </div>
 

@@ -4,6 +4,10 @@
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
 @source '../../storage/framework/views/*.php';
 
+/*
+ * Spacing rhythm: only use 1, 2, 3, 4, 6, 8, 12, 16 (4, 8, 12, 16, 24, 32, 48, 64px)
+ * for margins, paddings and gaps. Control heights: buttons/inputs 40px, small buttons 32px, badges 24px.
+ */
 @theme {
     --font-sans: 'Figtree Variable', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
         'Segoe UI Symbol', 'Noto Color Emoji';

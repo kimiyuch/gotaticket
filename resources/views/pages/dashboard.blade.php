@@ -129,7 +129,7 @@ new #[Title('Meine Tickets')] class extends Component
     @enderror
 
     {{-- As seeker --}}
-    <section class="mt-10">
+    <section class="mt-12">
         <div class="flex items-center justify-between gap-x-4">
             <h2 class="text-xl font-semibold tracking-tight">Meine Anfragen</h2>
             <x-button variant="soft" size="sm" :href="route('offers.index')" wire:navigate class="pl-2"><x-phosphor-ticket class="size-5" /> Freie Plätze</x-button>

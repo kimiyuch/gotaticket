@@ -6,10 +6,10 @@
 
 @php
     $classes = [
-        'relative inline-flex items-center justify-center gap-x-1.5 rounded-lg font-semibold whitespace-nowrap focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red disabled:opacity-50',
+        'relative inline-flex items-center justify-center gap-x-2 rounded-lg font-semibold whitespace-nowrap focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red disabled:opacity-50',
         match ($size) {
-            'sm' => 'px-3 py-1.5 text-sm/6',
-            default => 'px-4 py-2.5 text-base/6',
+            'sm' => 'px-3 py-1 text-sm/6',
+            default => 'px-4 py-2 text-base/6',
         },
         match ($variant) {
             'soft' => 'bg-red/8 text-red-dark hover:bg-red/12',

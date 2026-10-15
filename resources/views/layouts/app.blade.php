@@ -19,7 +19,7 @@
     <body class="min-h-dvh font-sans text-ink">
         <div class="isolate flex min-h-dvh flex-col">
             <header class="sticky top-0 z-10 border-b border-ink/8 bg-white/90 backdrop-blur-sm">
-                <div class="mx-auto flex max-w-2xl items-center gap-x-6 px-4 py-2.5 sm:px-6">
+                <div class="mx-auto flex max-w-2xl items-center gap-x-6 px-4 py-2 sm:px-6">
                     <a href="{{ route('home') }}" wire:navigate aria-label="Homepage" class="-m-1 rounded-lg p-1">
                         <x-logo horizontal class="h-10 -rotate-2 sm:h-11" />
                         <span class="sr-only">Got a ticket?</span>
@@ -41,7 +41,7 @@
                 {{ $slot }}
             </main>
 
-            <footer class="mx-auto w-full max-w-2xl px-4 pb-28 text-sm/6 text-ink/45 sm:px-6 sm:pb-10">
+            <footer class="mx-auto w-full max-w-2xl px-4 pb-28 text-sm/6 text-ink/45 sm:px-6 sm:pb-12">
                 <p>
                     Von Fans, für Fans. Kein offizielles Angebot des FC Winterthur.
                     Mit <x-phosphor-heart-fill class="inline size-4 -translate-y-px text-red" aria-label="Liebe" role="img" /> gemacht von <a href="https://kimiyu.ch" target="_blank" rel="noopener" class="underline decoration-ink/20 underline-offset-2 hover:text-ink">kimiyu.ch</a>

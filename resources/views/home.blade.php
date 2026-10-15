@@ -5,21 +5,21 @@
         <p class="mt-4 max-w-[48ch] text-lg text-pretty text-ink/60">Gib deinen Platz an einen Fan weiter, der ein Ticket sucht. Kostenlos, ohne Zwischenhandel, direkt von Fan zu Fan.</p>
     </section>
 
-    <div class="mt-10 grid gap-3 sm:grid-cols-2">
-        <a href="{{ route('offers.create') }}" class="group flex flex-col rounded-2xl bg-red p-5 text-white hover:bg-red-dark focus-visible:outline-2 focus-visible:outline-offset-2">
+    <div class="mt-12 grid gap-3 sm:grid-cols-2">
+        <a href="{{ route('offers.create') }}" class="group flex flex-col rounded-2xl bg-red p-6 text-white hover:bg-red-dark focus-visible:outline-2 focus-visible:outline-offset-2">
             <p class="text-xl font-semibold">Ich han eis</p>
             <p class="mt-1 text-base/6 text-white/80">Platz für einen Match freigeben.</p>
         </a>
-        <a href="{{ route('offers.index') }}" class="group flex flex-col rounded-2xl bg-white p-5 ring-1 ring-ink/10 hover:ring-ink/20 focus-visible:outline-2 focus-visible:outline-offset-2">
+        <a href="{{ route('offers.index') }}" class="group flex flex-col rounded-2xl bg-white p-6 ring-1 ring-ink/10 hover:ring-ink/20 focus-visible:outline-2 focus-visible:outline-offset-2">
             <p class="text-xl font-semibold">Ich bruuch eis</p>
             <p class="mt-1 text-base/6 text-ink/60">Freie Plätze ansehen und benachrichtigt werden.</p>
         </a>
     </div>
 
-    <section class="mt-16 border-t border-ink/8 pt-10">
+    <section class="mt-16 border-t border-ink/8 pt-12">
         <h2 class="text-xl font-semibold tracking-tight">So funktioniert's</h2>
 
-        <div class="mt-8 grid gap-10 sm:grid-cols-2 sm:gap-8">
+        <div class="mt-8 grid gap-12 sm:grid-cols-2 sm:gap-8">
             @foreach ([
                 'Du hast eins' => [
                     ['Freigeben', 'Match, Sektor, Anzahl Plätze. Dauert keine 20 Sekunden.'],
@@ -34,13 +34,13 @@
             ] as $role => $steps)
                 <div>
                     <h3 class="font-semibold text-red">{{ $role }}</h3>
-                    <ol class="mt-4 flex flex-col gap-y-5">
+                    <ol class="mt-4 flex flex-col gap-y-6">
                         @foreach ($steps as [$step, $text])
                             <li class="flex gap-x-4">
                                 <span class="flex size-7 shrink-0 items-center justify-center rounded-full bg-red/8 text-sm/6 font-semibold text-red-dark tabular-nums" aria-hidden="true">{{ $loop->iteration }}</span>
                                 <div>
                                     <p class="font-semibold">{{ $step }}</p>
-                                    <p class="mt-0.5 text-base/6 text-pretty text-ink/60">{{ $text }}</p>
+                                    <p class="mt-1 text-base/6 text-pretty text-ink/60">{{ $text }}</p>
                                 </div>
                             </li>
                         @endforeach

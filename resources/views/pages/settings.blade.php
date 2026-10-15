@@ -74,7 +74,7 @@ new #[Title('Einstellungen')] class extends Component
         <x-notice class="mt-6">{{ session('status') }}</x-notice>
     @endif
 
-    <form wire:submit="save" class="mt-8 flex flex-col gap-y-10">
+    <form wire:submit="save" class="mt-8 flex flex-col gap-y-12">
         <fieldset>
             <legend class="text-base/7 font-semibold">Ich suche Plätze in</legend>
             <div class="mt-3 grid grid-cols-2 gap-4">
@@ -89,7 +89,7 @@ new #[Title('Einstellungen')] class extends Component
         <div>
             <label for="wanted-seats" class="text-base/7 font-semibold">Normalerweise brauche ich</label>
             <div class="mt-3 grid grid-cols-[1fr_--spacing(8)] rounded-lg ring-1 ring-ink/15 sm:max-w-xs">
-                <select id="wanted-seats" name="wanted_seats" wire:model="wantedSeats" class="col-span-full row-start-1 appearance-none rounded-lg bg-white py-2.5 pr-8 pl-3 text-base/6 focus:outline-2 focus:-outline-offset-1 focus:outline-red">
+                <select id="wanted-seats" name="wanted_seats" wire:model="wantedSeats" class="col-span-full row-start-1 appearance-none rounded-lg bg-white py-2 pr-8 pl-3 text-base/6 focus:outline-2 focus:-outline-offset-1 focus:outline-red">
                     @foreach (range(1, 4) as $count)
                         <option value="{{ $count }}">{{ $count }} {{ $count === 1 ? 'Platz' : 'Plätze' }}</option>
                     @endforeach

@@ -6,9 +6,9 @@
     'bg-red/6 text-red-dark' => $type === 'error',
 ]) }} role="{{ $type === 'error' ? 'alert' : 'status' }}">
     @if ($type === 'error')
-        <x-phosphor-warning-circle class="mt-0.5 size-5 shrink-0" />
+        <span class="flex h-6 shrink-0 items-center"><x-phosphor-warning-circle class="size-5" /></span>
     @else
-        <x-phosphor-check-circle class="mt-0.5 size-5 shrink-0 text-red" />
+        <span class="flex h-6 shrink-0 items-center"><x-phosphor-check-circle class="size-5 text-red" /></span>
     @endif
     <p class="text-pretty">{{ $slot }}</p>
 </div>

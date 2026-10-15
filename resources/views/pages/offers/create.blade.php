@@ -80,9 +80,9 @@ new #[Title('Platz freigeben')] class extends Component
     <x-page-header title="Ich han eis" description="Du kannst an einem Match nicht? Gib deinen Platz frei, ein anderer Fan freut sich." />
 
     @if ($this->fixtures->isEmpty())
-        <p class="mt-8 rounded-xl bg-paper p-5 text-ink/60">Aktuell sind keine Heimspiele erfasst.</p>
+        <p class="mt-8 rounded-xl bg-paper p-6 text-ink/60">Aktuell sind keine Heimspiele erfasst.</p>
     @else
-        <form wire:submit="save" class="mt-8 flex flex-col gap-y-10">
+        <form wire:submit="save" class="mt-8 flex flex-col gap-y-12">
             <fieldset>
                 <legend class="text-base/7 font-semibold">Match</legend>
                 <div class="mt-3 divide-y divide-ink/8 rounded-xl ring-1 ring-ink/10">
@@ -111,7 +111,7 @@ new #[Title('Platz freigeben')] class extends Component
                 <legend class="text-base/7 font-semibold">Anzahl Plätze</legend>
                 <div class="mt-3 grid grid-cols-4 gap-4 sm:max-w-xs">
                     @foreach (range(1, $this::MAX_SEATS) as $count)
-                        <label wire:key="seats-{{ $count }}" class="flex cursor-pointer items-center justify-center rounded-lg py-2.5 text-base/6 font-semibold tabular-nums ring-1 ring-ink/10 hover:ring-ink/20 has-checked:bg-red/4 has-checked:ring-2 has-checked:ring-red has-focus-visible:outline-2 has-focus-visible:outline-offset-2 has-focus-visible:outline-red">
+                        <label wire:key="seats-{{ $count }}" class="flex cursor-pointer items-center justify-center rounded-lg py-2 text-base/6 font-semibold tabular-nums ring-1 ring-ink/10 hover:ring-ink/20 has-checked:bg-red/4 has-checked:ring-2 has-checked:ring-red has-focus-visible:outline-2 has-focus-visible:outline-offset-2 has-focus-visible:outline-red">
                             <input type="radio" name="seats" wire:model="seats" value="{{ $count }}" class="sr-only" aria-label="{{ $count }} {{ $count === 1 ? 'Platz' : 'Plätze' }}">
                             {{ $count }}
                         </label>
