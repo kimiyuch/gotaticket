@@ -7,7 +7,7 @@ Handover notes for the next working session. Last updated: 2026-10-15, end of da
 1. Open Claude Code in this folder (`~/Jamon.digital/Webroot/gotaticket.ch`) so Laravel Boost's MCP tools are available.
 2. Read this file, then `CLAUDE.md`.
 3. Check the app at https://gotaticket.ch.test (Herd). Run `composer run dev` for Vite + queue worker.
-4. Check "Open points" below. First thing: ask whether to push the unpushed commits to GitHub (`git log origin/main..main`).
+4. Check "Open points" below. Check for unpushed commits with `git log origin/main..main`.
 5. Deploy with `./deploy.sh` after changes (the user has been fine with deploying each finished change; pushing to GitHub only when asked).
 
 ## What it is
@@ -103,7 +103,7 @@ Same method as `joey.web`: `./deploy.sh` (zsh, from the Mac, own SSH key) refuse
 
 ## Open points / next steps
 
-- **Not pushed**: ~20 commits are only local + deployed; GitHub (`origin/main`) is behind. Ask before pushing.
+- GitHub is up to date as of 2026-10-15 evening (pushed after the session).
 - Live state (2026-10-15): users table was reset locally and live; admin is m@marceli.to. A second, unverified fan account (marcel.stadelmann@gmail.com) was registered live afterwards. Locally, `migrate:fresh --seed` brings the test users back (and wipes the admin).
 - Suggested, not yet done: queue the verification/reset mails too (so login/register never wait on SMTP), and send a real test mail to check delivery and the new mail design in an inbox.
 - App icons (`apple-touch-icon`, `icons/*`, PWA manifest) are still the ticket on black; favicon is now the red heart. Ask whether to switch them.
