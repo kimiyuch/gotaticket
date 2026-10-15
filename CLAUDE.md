@@ -9,6 +9,13 @@
 - Blade, JS and CSS are not covered by the fixer; indent them with tabs by hand.
 - Built assets in `public/build` are committed: run `npm run build` before committing frontend changes.
 
+=== .ai/project rules ===
+
+# Project Context
+
+- Read `PROGRESS.md` first: it describes the product (fan-to-fan ticket passing for FC Winterthur, no payments), conventions, domain model, pages and open points.
+- Keep `PROGRESS.md` up to date at the end of a working session.
+
 === foundation rules ===
 
 # Laravel Boost Guidelines
