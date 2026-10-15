@@ -116,7 +116,7 @@ new #[Title('Ich bruuch eis')] class extends Component
 
     @if (auth()->check() && $this->mySectorIds() !== [])
         <div class="mt-12 flex items-center justify-end gap-x-3">
-            <p class="text-base/6">
+            <p class="text-sm/6 text-ink/70">
                 <label for="only-my-sectors">Nur meine</label>
                 <a href="{{ route('settings') }}" wire:navigate class="underline decoration-ink/20 underline-offset-2 hover:decoration-red">Sektoren</a>
             </p>
