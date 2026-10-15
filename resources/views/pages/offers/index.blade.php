@@ -95,12 +95,12 @@ new #[Title('Ich bruuch eis')] class extends Component
     @auth
         @if ($this->mySectorIds() === [])
             <a href="{{ route('settings') }}" wire:navigate class="mt-6 flex items-center gap-x-4 rounded-xl bg-red/6 p-4 hover:bg-red/10">
-                <x-phosphor-bell class="size-6 shrink-0 text-red" />
+                <x-phosphor-bell-light class="size-6 shrink-0 text-red" />
                 <span class="flex-1">
                     <span class="block font-semibold">Nie mehr einen freien Platz verpassen</span>
                     <span class="block text-base/6 text-ink/60">Wähle deine Sektoren und aktiviere Benachrichtigungen.</span>
                 </span>
-                <x-phosphor-caret-right-bold class="size-5 shrink-0 text-ink/40" />
+                <x-phosphor-caret-right class="size-5 shrink-0 text-ink/40" />
             </a>
         @else
             <div class="mt-6 flex items-center gap-x-3">
@@ -110,12 +110,12 @@ new #[Title('Ich bruuch eis')] class extends Component
         @endif
     @else
         <a href="{{ route('login') }}" wire:navigate class="mt-6 flex items-center gap-x-4 rounded-xl bg-paper p-4 hover:bg-ink/5">
-            <x-phosphor-bell class="size-6 shrink-0 text-red" />
+            <x-phosphor-bell-light class="size-6 shrink-0 text-red" />
             <span class="flex-1">
                 <span class="block font-semibold">Benachrichtigt werden, wenn etwas frei wird</span>
                 <span class="block text-base/6 text-ink/60">Einloggen und Sektoren wählen.</span>
             </span>
-            <x-phosphor-caret-right-bold class="size-5 shrink-0 text-ink/40" />
+            <x-phosphor-caret-right class="size-5 shrink-0 text-ink/40" />
         </a>
     @endauth
 
@@ -151,7 +151,7 @@ new #[Title('Ich bruuch eis')] class extends Component
 
                             @if ($hasActiveClaim)
                                 <div class="mt-4 flex items-center justify-between gap-x-3 rounded-lg bg-paper px-3 py-2">
-                                    <p class="flex items-center gap-x-2 text-base/6 font-medium"><x-phosphor-check-circle-fill class="size-5 text-red" /> Angefragt</p>
+                                    <p class="flex items-center gap-x-2 text-base/6 font-medium"><x-phosphor-check-circle class="size-5 text-red" /> Angefragt</p>
                                     <x-button variant="plain" size="sm" :href="route('dashboard')" wire:navigate>Status ansehen</x-button>
                                 </div>
                             @else

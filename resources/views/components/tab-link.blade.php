@@ -9,6 +9,6 @@
         'text-ink before:absolute before:inset-x-6 before:-top-1 before:h-0.5 before:rounded-full before:bg-red' => $active,
         'text-ink/55' => ! $active,
     ]) }}>
-    <x-dynamic-component :component="'phosphor-'.$icon.($active ? '-fill' : '')" @class(['size-6', 'text-red' => $active]) />
+    <x-dynamic-component :component="'phosphor-'.$icon.'-light'" @class(['size-6', 'text-red' => $active]) />
     {{ $slot }}
 </a>
