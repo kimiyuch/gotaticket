@@ -1,13 +1,13 @@
 # Got a ticket? – Project status
 
-Handover notes for the next working session. Last updated: 2026-10-15 (deployment).
+Handover notes for the next working session. Last updated: 2026-10-15 (passwords, own admin, mail theme).
 
 ## Starting a new session
 
 1. Open Claude Code in this folder (`~/Jamon.digital/Webroot/gotaticket.ch`) so Laravel Boost's MCP tools are available.
 2. Read this file, then `CLAUDE.md`.
 3. Check the app at https://gotaticket.ch.test (Herd). Run `composer run dev` for Vite + queue worker.
-4. First topic: the user's two bigger issues (see "Open points").
+4. Check "Open points" below.
 
 ## What it is
 
@@ -24,7 +24,7 @@ Not affiliated with the club (stated in the footer). Deliberately no club crest/
 
 ## Stack
 
-Laravel 13, Livewire 4 (single-file page components in `resources/views/pages`), Filament 5 admin (`/admin`), Tailwind 4, Vite, Alpine (bundled with Livewire), Pest 5, SQLite, database queue, `laravel-notification-channels/webpush` (VAPID keys in `.env`), Phosphor icons (`codeat3/blade-phosphor-icons`, decorative by default via `config/blade-phosphor-icons.php`), Figtree self-hosted (`@fontsource-variable/figtree`), Laravel Boost (kept on purpose).
+Laravel 13, Livewire 4 (single-file page components in `resources/views/pages`), Laravel Fortify (headless auth, our own views), Tailwind 4, Vite, Alpine (bundled with Livewire), Pest 5, SQLite, database queue, `laravel-notification-channels/webpush` (VAPID keys in `.env`), Phosphor icons (`codeat3/blade-phosphor-icons`, decorative by default via `config/blade-phosphor-icons.php`), Figtree self-hosted (`@fontsource-variable/figtree`), Laravel Boost (kept on purpose).
 
 ## Conventions
 
@@ -32,18 +32,19 @@ Laravel 13, Livewire 4 (single-file page components in `resources/views/pages`),
 - PHP formatting: **PHP-CS-Fixer** (`.php-cs-fixer.dist.php`) via `composer format` / `composer format:check`. **Pint was removed** – it cannot indent with tabs; do not reinstall it.
 - `public/build` **is committed**: run `npm run build` before committing frontend changes (we build locally and deploy the result).
 - UI copy: standard German with Swiss German touches ("Ich han eis", "Ich bruuch eis", "Ich gang!", "Ich chan doch nöd"), Swiss spelling (ss, no ß). No emojis in UI.
-- Spacing scale: 4/8/12/16/24/32/48/64 px (Tailwind 1,2,3,4,6,8,12,16) – documented in `resources/css/app.css`. One deliberate exception: `mt-28` above "So funktioniert's" on home.
+- Spacing scale: 4/8/12/16/24/32/48/64 px (Tailwind 1,2,3,4,6,8,12,16) – documented in `resources/css/app.css`. One deliberate exception: `sm:mt-28` above "So funktioniert's" on home (`mt-16` on mobile).
 - Control heights: buttons/inputs 40px, small buttons 32px, badges 24px.
 - Brand colours (Tailwind theme): `red` #d10a10, `red-dark` #b5000d, `ink` #120a01, `paper` #f6f4f0, `line` #e5e3df.
-- Commit after each change; push only when asked.
+- Commit after each change; push and deploy only when asked.
+- Translations: `lang/de/*.php` (auth, passwords, validation, pagination; picked up as fallback for `de_CH`) and `lang/de_CH.json` (JSON strings do not fall back, hence the full locale name).
 
 ## Domain model
 
 - `sectors` (code, name, kind standing/seated, sort, is_active). Seeded: A Sitzplatz Estrade, B Stehplatz Bierkurve, C Stehplatz Osttribüne, D2 Stehplatz Eulachkurve, Sitzplatz Haupttribüne, Stehplatz Sirupkurve, Stehplatz Klubhaus. **Codes for the last three are unknown.** Away sector excluded on purpose.
-- `fixtures` (opponent, kickoff_at, competition). Seeded: home games until the winter break 2026 (Luzern cup 17.10., Nyonnais 23.10., Carouge 7.11., Rapperswil-Jona 27.11., Kriens 12.12.). Spring 2027 not published yet – add via Filament.
+- `fixtures` (opponent, kickoff_at, competition). Seeded: home games until the winter break 2026 (Luzern cup 17.10., Nyonnais 23.10., Carouge 7.11., Rapperswil-Jona 27.11., Kriens 12.12.). Spring 2027 not published yet – add via `/admin/matches`.
 - `offers` (fixture, giver, sector, seats 1–4, note, status open/taken/withdrawn).
 - `claims` (offer, seeker, seats, status requested → accepted → sent → received, or declined/cancelled; outcome attended/no_show/ticket_invalid after kick-off).
-- `sector_user` = sectors a seeker follows (for notifications). Users: magic-link login (no passwords except admins), name, phone (optional), wanted_seats, notify_by_mail/push, is_admin, blocked_at.
+- `sector_user` = sectors a seeker follows (for notifications). Users: email + password (Fortify), email must be verified before offering or requesting (`verified` middleware on `/ich-han-eis`, check in the request action and `RequestSeats`), name, phone (optional), wanted_seats, notify_by_mail/push, is_admin, blocked_at. Accounts created by the old magic link have no password and use "Passwort vergessen".
 - Reliability record (`User::reliability()`) is derived from claims.
 - Domain logic lives in `app/Actions/Claims/*` and `app/Actions/Offers/NotifyMatchingSeekers.php`; notifications in `app/Notifications` (base `FanNotification`: push + mail, queued).
 
@@ -53,15 +54,16 @@ Laravel 13, Livewire 4 (single-file page components in `resources/views/pages`),
 - `/ich-bruuch-eis` free seats – one card per game (tinted header with red date, competition badge), all sectors by default, toggle "Nur meine Sektoren anzeigen". "Ich gang! Anfragen" opens a request dialog (summary, seat picker if >1 free, commitment note, "Bestätigen").
 - `/ich-han-eis` offer a seat – game list, sector tiles, seats 1–4, note.
 - `/meine-tickets` dashboard – own requests + own offers with the full handover flow (accept/decline, contact reveal, ticket sent/received, cancel, attendance/invalid-ticket reports after kick-off).
-- `/einstellungen` – sectors, wanted seats, push toggle (PWA, `public/sw.js`, `resources/js/push.js`), email toggle, name/phone, logout.
-- `/login` magic link (locally the page shows a direct login link).
-- `/admin` Filament: fixtures, sectors.
+- `/profil` (4th tab "Profil"; `/einstellungen` redirects here) – name, email (change triggers re-verification), phone, sectors, wanted seats, push toggle (PWA, `public/sw.js`, `resources/js/push.js`), email toggle, password change/set, admin link for admins, logout.
+- Auth (Fortify routes, views in `resources/views/auth`, own layout `layouts/auth.blade.php`: centered white card on a subtle neutral gray, no header/logo, left-aligned heading + one sentence): `/login`, `/register`, `/forgot-password`, `/reset-password/{token}`, `/email/verify`. Login/logout responses and blocked-user check in `FortifyServiceProvider`. Blocked fans get logged out on their next request (`LogoutBlockedUsers` middleware).
+- `/admin` own Livewire pages (gate `admin` = `is_admin` and not blocked; sub nav `x-admin-nav`): Übersicht (stats, next matches), Matches (list, create/edit, delete only without offers), Sektoren (list, create/edit, active toggle), Fans (search, filter, reliability counts, block/unblock, admin toggle – never on the own account), Übergaben (all claims, filter by status and match). Reached via "Admin" in the desktop nav and a button on the profile page.
 
-UI building blocks: `x-button` (primary/soft/neutral/plain, md/sm), `x-fixture`, `x-badge`, `x-dialog` (+ global `x-confirm-dialog` via `$store.confirm.ask()`), toasts via `$this->dispatch('toast', …)` / `session('toast')` / `$store.toasts.push()`, `x-form.*`, `x-contact`, `x-page-header`, `x-nav-link` (desktop, red underline), `x-tab-link` (mobile bottom tab bar).
+UI building blocks: `x-button` (primary/soft/neutral/plain, md/sm), `x-fixture`, `x-badge`, `x-dialog` (+ global `x-confirm-dialog` via `$store.confirm.ask()`), toasts via `$this->dispatch('toast', …)` / `session('toast')` / `$store.toasts.push()`, `x-form.*` (input, select, radio, toggle, choice), `x-contact`, `x-page-header`, `x-nav-link` (desktop, red underline), `x-tab-link` (mobile bottom tab bar).
 
 ## Local setup / testing
 
-- Tests: `php artisan test --compact` (37 passing).
+- Tests: `php artisan test --compact` (58 passing).
+- Visual checks without the browser preview: headless Chrome (`--screenshot`) for guest pages; logged-in pages via a small Playwright script outside the repo (log in through the form with a test user).
 - Queue: notifications are queued – run `composer run dev` (includes queue listener) or `php artisan queue:work`.
 - Test users (admins, passwords in git-ignored `database/seeders/test-users.local.json`): patrick@, alex@, pippo@, marcel@example.com. `migrate:fresh --seed` recreates them if the file exists.
 
@@ -73,7 +75,7 @@ Same method as `joey.web`: `./deploy.sh` (zsh, from the Mac, own SSH key) refuse
 - Never touched by deploys: `.env`, `public/.htaccess` (first line `Use php-fpm php84`, managed by the Hostpoint panel; the rest is a copy of ours – update it by hand if ours changes), `storage/`, `database/database.sqlite`.
 - Server `.env`: production, debug off, own `APP_KEY` and VAPID keys, mail via Hostpoint SMTP (`asmtp.mail.hostpoint.ch`, sender `bot@kimiyu.ch`, credentials copied from wallaby), `SESSION_SECURE_COOKIE=true`.
 - Queue: crontab entry every minute, `queue:work --stop-when-empty`.
-- Seeded on the server: sectors and fixtures only (no test users). Admins: log in via magic link, then set `is_admin` (and a password) via tinker on the server.
+- Seeded on the server: sectors and fixtures only (no test users). Admins: register normally, then an existing admin promotes them under `/admin/fans` (the very first admin via tinker on the server).
 
 ## Decisions made (and why) – don't undo without asking
 
@@ -88,14 +90,16 @@ Same method as `joey.web`: `./deploy.sh` (zsh, from the Mac, own SSH key) refuse
 - Confirmations as toasts (top right desktop, full-width flush top on mobile); browser `confirm()` replaced by the dialog component.
 - Home hero: text full width + two buttons, no crest/club logo (trademark / would look official), no divider between sections.
 - Accessibility pass done: pointer cursor on all clickables (global rule in `app.css`), ARIA labels with context on repeated buttons, skip link, switch roles, live regions.
+- Favicon: red heart with a white heart inside (`public/favicon.svg` + PNG fallback). App icons (`apple-touch-icon`, `icons/*`) are still the ticket on black.
+- Auth: Fortify instead of Breeze (Breeze would bring its own views/components; frozen package). Magic link dropped. No social logins. UI built with the ui.sh design skill guidelines.
+- No Filament: own admin so it matches the app and has no heavy dependency.
+- Emails: Laravel markdown mail with own theme `resources/views/vendor/mail/html/themes/gotaticket.css` (config `mail.markdown.theme`), logo `public/mail/logo.png`, self-hosted Figtree `public/mail/figtree.woff2` (no Google Fonts), left-aligned red button, German footer with link to the profile. German texts for the verification/reset mails in `AppServiceProvider`.
 
 ## Open points / next steps
 
-- The user has **two bigger issues** to raise in the next session (not yet known).
-- Missing sector codes for Haupttribüne, Sirupkurve, Klubhaus.
-- Web push not yet verified on a real device (needs a deployed HTTPS host; iOS only as installed PWA).
-- Admin: user list / blocking, overview of offers and handovers.
+- **Not deployed yet**: passwords, own admin and mail theme are committed locally only. After deploying, the existing accounts on gotaticket.kimiyu.ch have no password: use "Passwort vergessen". The old Filament assets on the server are removed automatically (rsync `--delete`).
+- Make the first admin on the server via tinker (`is_admin = true`), the rest via `/admin/fans`.
+- Missing sector codes for Haupttribüne, Sirupkurve, Klubhaus (now editable under `/admin/sektoren`).
+- Web push not yet verified on a real device (iOS only as installed PWA).
 - Match-day reminder; smoother "pass on a received ticket" flow.
-- Deployment to gotaticket.kimiyu.ch is live (2026-10-15), but **HTTPS is missing**: activate the Let's Encrypt certificate for the subdomain in the Hostpoint panel (plus HTTPS redirect). Until then login fails (secure cookies) and push cannot work.
-- After HTTPS: test magic-link mail delivery, create the admin accounts, test web push on a phone.
 - Later: own sender address (e.g. hallo@gotaticket.ch) and the gotaticket.ch domain.
